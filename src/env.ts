@@ -35,6 +35,12 @@ export const env = {
     sendgrid: {
       apiKey: getOsEnvOptional('SENDGRID_API_KEY'),
     },
+    emailjs: {
+      privateKey: getOsEnvOptional('EMAILJS_PRIVATE_KEY'),
+      publicKey: getOsEnvOptional('EMAILJS_PUBLIC_KEY'),
+      serviceId: getOsEnvOptional('EMAILJS_SERVICE_ID'),
+      templateId: getOsEnvOptional('EMAILJS_TEMPLATE_ID'),
+    },
     email: checkEmail('EMAIL'),
   },
 };

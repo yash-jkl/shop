@@ -19,12 +19,15 @@ import {
   token,
   userOutputWithToken,
 } from '../constants';
+import { EmailService } from '../../../utils/email/email.service';
+import { mockEmailService } from '../mocks/email.service.mock';
 
 describe('UserService', () => {
   let userService: UserService;
   let userRepository;
   let hashService;
   let tokenService;
+  let emailService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -43,12 +46,17 @@ describe('UserService', () => {
           provide: UserRepository,
           useFactory: mockUsersRepository,
         },
+        {
+          provide: EmailService,
+          useFactory: mockEmailService,
+        },
       ],
     }).compile();
     userService = module.get<UserService>(UserService);
     userRepository = module.get<UserRepository>(UserRepository);
     hashService = module.get<HashService>(HashService);
     tokenService = module.get<TokenService>(TokenService);
+    emailService = module.get<EmailService>(EmailService);
   });
 
   it('UsersService should be defined', () => {
@@ -60,6 +68,7 @@ describe('UserService', () => {
       hashService.hash.mockReturnValue(userOutput.password);
       tokenService.token.mockReturnValue(token);
       userRepository.save.mockReturnValue(userOutput);
+      emailService.sendEmail();
       const user = await userService.createUser(createUserInput);
 
       expect(tokenService.token).toHaveBeenCalled();
@@ -67,6 +76,7 @@ describe('UserService', () => {
     });
 
     it('Throw emailExistsException when entering dublicate email', async () => {
+      emailService.sendEmail();
       const duplicateKeyError = { code: '23505' };
       userRepository.save.mockRejectedValue(duplicateKeyError);
       try {

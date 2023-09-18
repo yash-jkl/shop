@@ -10,6 +10,7 @@ import {
   emailExistsException,
 } from '../errors';
 import { LoggerService } from '../../utils/logger/winstonLogger';
+import { EmailService } from '../../utils/email/email.service';
 
 export interface IUserService {
   createUser(body: UserCreateReqDto): Promise<any>;
@@ -28,6 +29,8 @@ export class UserService implements IUserService {
     private readonly hashService: HashService,
 
     private readonly tokenService: TokenService,
+
+    private readonly emailService: EmailService,
   ) {}
   static logInfo = 'Service - User:';
 
@@ -46,6 +49,7 @@ export class UserService implements IUserService {
       this.logger.info(
         `${UserService.logInfo} Created User with email: ${body.email}`,
       );
+      this.emailService.sendEmail(user.email, 'Welcome', 'Welcome');
       return {
         user: { ...user },
         token: `Bearer ${await this.tokenService.token(token)}`,
