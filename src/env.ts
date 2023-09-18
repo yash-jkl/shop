@@ -32,6 +32,7 @@ export const env = {
     password: getOsEnv('ADMIN_PASSWORD'),
   },
   mail: {
+    email: checkEmail('EMAIL'),
     sendgrid: {
       apiKey: getOsEnvOptional('SENDGRID_API_KEY'),
     },
@@ -41,6 +42,11 @@ export const env = {
       serviceId: getOsEnvOptional('EMAILJS_SERVICE_ID'),
       templateId: getOsEnvOptional('EMAILJS_TEMPLATE_ID'),
     },
-    email: checkEmail('EMAIL'),
+  },
+  payments: {
+    stripe: {
+      secretKey: getOsEnvOptional('STRIP_SECRET_KEY'),
+      endPointSecrert: getOsEnvOptional('STRIP_ENDPOINT_SECRET'),
+    },
   },
 };
