@@ -22,4 +22,22 @@ export class StripeService {
     });
     return session;
   }
+
+  async verifyPayment(data, signature): Promise<boolean> {
+    try {
+      const event = this.stripe.webhooks.constructEvent(
+        data,
+        signature,
+        env.payments.stripe.endPointSecrert,
+      );
+
+      if (event.type === 'invoice.payment_succeeded') {
+        return true;
+      } else {
+        throw new Error();
+      }
+    } catch (error) {
+      return false;
+    }
+  }
 }

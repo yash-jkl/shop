@@ -45,7 +45,8 @@ export const env = {
   },
   payments: {
     stripe: {
-      secretKey: getOsEnv('STRIP_SECRET_KEY'),
+      secretKey: getOsEnvOptional('STRIP_SECRET_KEY'),
+      endPointSecrert: getOsEnvOptional('STRIP_ENDPOINT_SECRET'),
     },
   },
 };
