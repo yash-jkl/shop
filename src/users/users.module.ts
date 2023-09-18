@@ -9,6 +9,8 @@ import { BcryptService } from '../utils/hash/bcrypt/bcrypt.service';
 import { TokenService, JwtService } from '../utils/token/services';
 import { JwtModule } from '@nestjs/jwt';
 import { LoggerModule } from '../utils/logger/logger.module';
+import { EmailService } from '../utils/email/email.service';
+import { EmailjsService } from '../utils/email/emailjs/emailjs.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity]), JwtModule, LoggerModule],
@@ -23,6 +25,10 @@ import { LoggerModule } from '../utils/logger/logger.module';
     {
       provide: TokenService,
       useClass: JwtService,
+    },
+    {
+      provide: EmailService,
+      useClass: EmailjsService,
     },
   ],
   exports: [UserService],
