@@ -31,4 +31,10 @@ export const env = {
     email: checkEmail('ADMIN_EMAIL'),
     password: getOsEnv('ADMIN_PASSWORD'),
   },
+  mail: {
+    sendgrid: {
+      apiKey: getOsEnvOptional('SENDGRID_API_KEY'),
+    },
+    email: checkEmail('EMAIL'),
+  },
 };
