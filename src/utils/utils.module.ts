@@ -12,9 +12,10 @@ import { LoggerModule } from './logger/logger.module';
 import { HashService } from './hash/hash.service';
 import { BcryptService } from './hash/bcrypt/bcrypt.service';
 import { EmailModule } from './email/email.module';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
-  imports: [HashModule, JwtModule, LoggerModule, EmailModule],
+  imports: [HashModule, JwtModule, LoggerModule, EmailModule, PaymentsModule],
   providers: [
     {
       provide: TokenService,
