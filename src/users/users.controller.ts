@@ -18,8 +18,9 @@ import {
   UserCreateReqDto,
   UserLoginReqDto,
   UserLoginResDto,
-  UserProfileReqDto,
+  UserHeaderReqDto, 
   UserProfileResDto,
+  UserPasswordReqDto,
 } from './dto/index';
 import { Serialize } from '../utils/loaders/SerializeDto';
 import { UserService } from './services/users.service';
@@ -71,7 +72,7 @@ export class UsersController {
 
   @Serialize(UserProfileResDto)
   @ApiResponse({
-    description: 'for more information please check UserLoginReqDto schema',
+    description: 'for more information please check UserHeaderReqDto schema',
   })
   @ApiOkResponse({
     description:
@@ -83,7 +84,24 @@ export class UsersController {
   })
   @ApiBearerAuth()
   @Get('/profile')
-  async profile(@Headers('user') user: UserProfileReqDto) {
+  async profile(@Headers('user') user: UserHeaderReqDto, ) {
     return this.userService.profile(user);
+  }
+
+  @Serialize(UserProfileResDto)
+  @ApiResponse({
+    description: 'for more information please check UserHeaderReqDto schema',
+  })
+  @ApiOkResponse({
+    description:
+    'When user change password request is successfull',
+  })
+  @ApiBadRequestResponse({
+    description: 'when old password is incorrect',
+  })
+  @ApiBearerAuth()
+  @Post('/change-password')
+  async changePassword(@Headers('user') user: UserHeaderReqDto, @Body() body: UserPasswordReqDto) {
+    return this.userService.changePassword(user, body);
   }
 }

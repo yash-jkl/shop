@@ -4,4 +4,5 @@ export const mockUsersRepository = (): IUserRepository => ({
   getByEmail: jest.fn(),
   getById: jest.fn(),
   save: jest.fn(),
+  updateUser: jest.fn(),
 });

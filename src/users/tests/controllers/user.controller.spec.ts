@@ -9,6 +9,7 @@ import {
   userOutput,
   userOutputWithToken,
   userProfileInput,
+  validChangePassword,
   validInputCreate,
   validInputLogin,
 } from '../constants';
@@ -75,6 +76,22 @@ describe('User Controller', () => {
     it('Invalid email should throw Validation Error', async () => {
       try {
         await usersController.profile(invalidUserProfileInput);
+        fail('ReferenceError is not thrown');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ReferenceError);
+      }
+    });
+  });
+
+  describe('User change password', () => {
+    it('Valid User Header should return valid response', async () => {
+      userService.profile.mockReturnValue(userOutput);
+      await usersController.changePassword(userProfileInput,validChangePassword);
+      expect(userService.changePassword).toBeCalled();
+    });
+    it('Invalid email should throw Validation Error', async () => {
+      try {
+        await usersController.changePassword(invalidUserProfileInput,validChangePassword);
         fail('ReferenceError is not thrown');
       } catch (error) {
         expect(error).toBeInstanceOf(ReferenceError);
