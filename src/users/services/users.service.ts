@@ -1,5 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { UserCreateReqDto, UserLoginReqDto, UserHeaderReqDto, UserPasswordReqDto } from '../dto';
+import {
+  UserCreateReqDto,
+  UserLoginReqDto,
+  UserHeaderReqDto,
+  UserPasswordReqDto,
+} from '../dto';
 import { UserRepository } from '../repository/users.repository';
 import { TokenService } from '../../utils/token/services';
 import { HashService } from '../../utils/hash/hash.service';
@@ -18,7 +23,10 @@ export interface IUserService {
   createUser(body: UserCreateReqDto): Promise<any>;
   loginUser(body: UserLoginReqDto): Promise<any>;
   profile(body: UserHeaderReqDto): Promise<any>;
-  changePassword(header: UserHeaderReqDto, data: UserPasswordReqDto): Promise<any>;
+  changePassword(
+    header: UserHeaderReqDto,
+    data: UserPasswordReqDto,
+  ): Promise<any>;
 }
 
 @Injectable()
@@ -122,7 +130,7 @@ export class UserService implements IUserService {
     this.logger.info(
       `${UserService.logInfo} Initiated Change Password request for id: ${header.id}`,
     );
-    let user: UserEntity
+    let user: UserEntity;
     try {
       user = await this.userRepository.getById(header.id);
     } catch (error) {
@@ -132,13 +140,10 @@ export class UserService implements IUserService {
       throw new NotFoundException();
     }
     const [isEqual, hash] = await Promise.all([
-      this.hashService.compare(
-        data.oldPassword,
-        user.password,
-      ),
-      this.hashService.hash(data.newPassword)
-    ])
-    if(!isEqual) {
+      this.hashService.compare(data.oldPassword, user.password),
+      this.hashService.hash(data.newPassword),
+    ]);
+    if (!isEqual) {
       this.logger.warn(
         `${UserService.logInfo} change password request faild due to incorrect password for id: ${header.id}`,
       );
@@ -148,6 +153,6 @@ export class UserService implements IUserService {
     this.logger.info(
       `${UserService.logInfo} change password request succeded for id: ${header.id}`,
     );
-    return await this.userRepository.updateUser(user)     
+    return await this.userRepository.updateUser(user);
   }
 }

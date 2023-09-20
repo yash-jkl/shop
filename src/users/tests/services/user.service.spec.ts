@@ -145,14 +145,14 @@ describe('UserService', () => {
       userRepository.getById.mockReturnValue(userOutput);
       hashService.compare.mockResolvedValue(true);
       hashService.hash.mockResolvedValue('newHashedPassword');
-      userRepository.updateUser.mockResolvedValue()
+      userRepository.updateUser.mockResolvedValue();
       await userService.changePassword(userProfileInput, validChangePassword);
-    expect(userRepository.updateUser).toHaveBeenCalledWith(userOutput)
+      expect(userRepository.updateUser).toHaveBeenCalledWith(userOutput);
     });
     it('Throw NotFoundException When ID Doesnt Exists', async () => {
       userRepository.getById.mockRejectedValue(new NotFoundException());
       try {
-        await userService.changePassword(userProfileInput,validChangePassword);
+        await userService.changePassword(userProfileInput, validChangePassword);
         fail('NotFoundException not thrown');
       } catch (error) {
         expect(error).toBeInstanceOf(NotFoundException);
@@ -163,7 +163,7 @@ describe('UserService', () => {
       hashService.compare.mockResolvedValue(false);
       hashService.hash.mockResolvedValue('newHashedPassword');
       try {
-        await userService.changePassword(userProfileInput,validChangePassword);
+        await userService.changePassword(userProfileInput, validChangePassword);
         fail('passwordMismatchException not thrown');
       } catch (error) {
         expect(error).toBeInstanceOf(passwordMismatchException);

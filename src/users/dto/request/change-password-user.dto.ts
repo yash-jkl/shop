@@ -12,7 +12,6 @@ export class UserPasswordReqDto {
   })
   oldPassword: string;
 
-
   @IsString()
   @MaxLength(100)
   @IsNotBlank()

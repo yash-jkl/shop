@@ -1,4 +1,4 @@
-import { ProductEntity } from '../../products/entities';
+import { AdminEntity } from '../../admin/entities';
 import {
   BeforeInsert,
   Column,
@@ -6,39 +6,41 @@ import {
   DeleteDateColumn,
   Entity,
   Index,
-  OneToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
-  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 @Entity({
-  name: 'admin',
+  name: 'products',
 })
-@Unique(['email'])
-export class AdminEntity {
+export class ProductEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({
-    nullable: true,
-    name: 'first_name',
-  })
-  firstName: string;
-
-  @Column({
-    nullable: true,
-    name: 'last_name',
-  })
-  lastName: string;
-
-  @Column()
   @Index()
-  email: string;
+  @Column({
+    name: 'title',
+  })
+  title: string;
 
+  @Column({
+    nullable: true,
+    name: 'description',
+  })
+  description: string;
+
+  @Index()
   @Column()
-  password: string;
+  price: number;
+
+  @Index()
+  @Column({
+    name: 'is_available',
+    default: true,
+  })
+  isAvailable: boolean;
 
   @CreateDateColumn({
     name: 'created_at',
@@ -58,8 +60,8 @@ export class AdminEntity {
   })
   deletedAt: Date;
 
-  @OneToMany(() => ProductEntity, (product) => product.admin)
-  products: ProductEntity[];
+  @ManyToOne(() => AdminEntity, (admin) => admin.products)
+  admin: AdminEntity;
 
   @BeforeInsert()
   generateId() {

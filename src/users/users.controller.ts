@@ -18,7 +18,7 @@ import {
   UserCreateReqDto,
   UserLoginReqDto,
   UserLoginResDto,
-  UserHeaderReqDto, 
+  UserHeaderReqDto,
   UserProfileResDto,
   UserPasswordReqDto,
 } from './dto/index';
@@ -84,7 +84,7 @@ export class UsersController {
   })
   @ApiBearerAuth()
   @Get('/profile')
-  async profile(@Headers('user') user: UserHeaderReqDto, ) {
+  async profile(@Headers('user') user: UserHeaderReqDto) {
     return this.userService.profile(user);
   }
 
@@ -93,15 +93,17 @@ export class UsersController {
     description: 'for more information please check UserHeaderReqDto schema',
   })
   @ApiOkResponse({
-    description:
-    'When user change password request is successfull',
+    description: 'When user change password request is successfull',
   })
   @ApiBadRequestResponse({
     description: 'when old password is incorrect',
   })
   @ApiBearerAuth()
   @Post('/change-password')
-  async changePassword(@Headers('user') user: UserHeaderReqDto, @Body() body: UserPasswordReqDto) {
+  async changePassword(
+    @Headers('user') user: UserHeaderReqDto,
+    @Body() body: UserPasswordReqDto,
+  ) {
     return this.userService.changePassword(user, body);
   }
 }

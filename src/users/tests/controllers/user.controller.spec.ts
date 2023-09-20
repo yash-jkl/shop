@@ -86,12 +86,18 @@ describe('User Controller', () => {
   describe('User change password', () => {
     it('Valid User Header should return valid response', async () => {
       userService.profile.mockReturnValue(userOutput);
-      await usersController.changePassword(userProfileInput,validChangePassword);
+      await usersController.changePassword(
+        userProfileInput,
+        validChangePassword,
+      );
       expect(userService.changePassword).toBeCalled();
     });
     it('Invalid email should throw Validation Error', async () => {
       try {
-        await usersController.changePassword(invalidUserProfileInput,validChangePassword);
+        await usersController.changePassword(
+          invalidUserProfileInput,
+          validChangePassword,
+        );
         fail('ReferenceError is not thrown');
       } catch (error) {
         expect(error).toBeInstanceOf(ReferenceError);

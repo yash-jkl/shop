@@ -1,8 +1,4 @@
-import {
-  UserCreateReqDto,
-  UserLoginReqDto,
-  UserHeaderReqDto,
-} from '../../dto';
+import { UserCreateReqDto, UserLoginReqDto, UserHeaderReqDto } from '../../dto';
 import { UserType } from '../../../utils/token/types';
 
 export const createUserInput: UserCreateReqDto = {
@@ -77,5 +73,5 @@ export const invalidInputLogin = {
 
 export const validChangePassword = {
   oldPassword: '123456',
-  newPassword: '123456'
-}
+  newPassword: '123456',
+};
