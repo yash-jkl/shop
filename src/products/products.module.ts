@@ -9,7 +9,10 @@ import { AdminRepository } from '../admin/repository/admin.repository';
 import { AdminEntity } from '../admin/entities';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ProductEntity, AdminEntity]), LoggerModule],
+  imports: [
+    TypeOrmModule.forFeature([ProductEntity, AdminEntity]),
+    LoggerModule,
+  ],
   controllers: [ProductsController],
   providers: [ProductsService, ProductRepository, AdminRepository],
 })

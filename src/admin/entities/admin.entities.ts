@@ -18,7 +18,7 @@ import { v4 as uuidv4 } from 'uuid';
   name: 'admin',
 })
 @Unique(['email'])
-export class AdminEntity extends BaseEntity{
+export class AdminEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

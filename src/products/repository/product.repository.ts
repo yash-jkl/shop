@@ -2,13 +2,24 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProductEntity } from '../entities';
 import { Repository } from 'typeorm/repository/Repository';
-import { ProductCreateReqDto } from '../dto';
+import {
+  ProductCreateReqDto,
+  ProductGetFieldReqDto,
+  ProductGetSortOrderReqDto,
+} from '../dto';
 import { UpdateResult } from 'typeorm';
 
 export interface IProductRepository {
   save(productEntity: ProductEntity): Promise<ProductEntity>;
   getById(id: string): Promise<ProductEntity | undefined>;
-  updateUser(data: ProductEntity): Promise<UpdateResult>;
+  updateProduct(data: ProductEntity): Promise<UpdateResult>;
+  getByAdmin(
+    adminId: string,
+    limit: number,
+    skip: number,
+    sortOrderDto: ProductGetSortOrderReqDto,
+    sortField: ProductGetFieldReqDto,
+  ): Promise<ProductEntity[]>;
 }
 
 @Injectable()
@@ -31,7 +42,7 @@ export class ProductRepository implements IProductRepository {
     });
   }
 
-  async updateUser(data: ProductEntity): Promise<UpdateResult> {
+  async updateProduct(data: ProductEntity): Promise<UpdateResult> {
     return await this.productEntity.update(
       {
         id: data.id,
@@ -40,5 +51,23 @@ export class ProductRepository implements IProductRepository {
         ...data,
       },
     );
+  }
+
+  async getByAdmin(
+    adminId: string,
+    limit: number,
+    skip: number,
+    sortOrderDto: ProductGetSortOrderReqDto,
+    sortField: ProductGetFieldReqDto,
+  ): Promise<ProductEntity[]> {
+    const sortOrder: any = sortOrderDto;
+    return await this.productEntity
+      .createQueryBuilder('product')
+      .innerJoin('product.admin', 'admin')
+      .where('admin.id = :adminId', { adminId })
+      .orderBy(`product.${sortField}`, sortOrder)
+      .skip(skip)
+      .take(limit)
+      .getMany();
   }
 }

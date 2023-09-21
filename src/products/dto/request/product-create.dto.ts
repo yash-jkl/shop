@@ -10,7 +10,6 @@ import { IsNotBlank } from '../../../utils/decorators';
 import { AdminEntity } from '../../../admin/entities';
 
 export class ProductCreateReqDto {
-  
   @IsNotBlank()
   @IsNotEmpty()
   @IsString()

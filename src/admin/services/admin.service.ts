@@ -103,7 +103,7 @@ export class AdminService implements IAdminService {
       this.logger.info(
         `${AdminService.logInfo} Found Admin Profile with id: ${body.id}`,
       );
-      console.log(admin)
+      console.log(admin);
       return admin;
     } catch (error) {
       this.logger.warn(
