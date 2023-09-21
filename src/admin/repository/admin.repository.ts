@@ -37,7 +37,9 @@ export class AdminRepository implements IAdminRepository {
     return await this.adminEntity.findOneOrFail({
       where: {
         id,
-      },
+      },relations: {
+        products: true,
+    }
     });
   }
 }

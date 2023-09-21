@@ -1,6 +1,8 @@
 import { AdminEntity } from '../../admin/entities';
 import {
+  BaseEntity,
   BeforeInsert,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
@@ -13,9 +15,9 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 
 @Entity({
-  name: 'products',
+  name: 'product',
 })
-export class ProductEntity {
+export class ProductEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -67,6 +69,14 @@ export class ProductEntity {
   generateId() {
     if (!this.id) {
       this.id = uuidv4();
+    }
+  }
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  validateAdminData() {
+    if (!this.admin) {
+      throw new Error('Admin data is required for ProductEntity.');
     }
   }
 }

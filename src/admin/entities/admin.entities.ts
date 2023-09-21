@@ -1,5 +1,6 @@
 import { ProductEntity } from '../../products/entities';
 import {
+  BaseEntity,
   BeforeInsert,
   Column,
   CreateDateColumn,
@@ -17,7 +18,7 @@ import { v4 as uuidv4 } from 'uuid';
   name: 'admin',
 })
 @Unique(['email'])
-export class AdminEntity {
+export class AdminEntity extends BaseEntity{
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -58,7 +59,9 @@ export class AdminEntity {
   })
   deletedAt: Date;
 
-  @OneToMany(() => ProductEntity, (product) => product.admin)
+  @OneToMany(() => ProductEntity, (product) => product.admin, {
+    nullable: false,
+  })
   products: ProductEntity[];
 
   @BeforeInsert()

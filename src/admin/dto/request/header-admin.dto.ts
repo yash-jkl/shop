@@ -1,6 +1,6 @@
 import { UserType } from '../../../utils/token/types';
 
-export class AdminProfileReqDto {
+export class AdminHeaderReqDto {
   id: string;
   userType: UserType.ADMIN;
   email: string;
