@@ -11,9 +11,29 @@ import {
   ProductGetAllPageReqDto,
   ProductGetAllSortOrderReqDto,
 } from '../dto';
+import { ProductEntity } from '../entities';
+
+export interface IProductsService {
+  createProduct(
+    admin: AdminHeaderReqDto,
+    data: ProductCreateReqDto,
+  ): Promise<boolean> | Error;
+  getProducts(
+    admin: AdminHeaderReqDto,
+    page: ProductGetAllPageReqDto,
+    limit: ProductGetAllLimitReqDto,
+    order: ProductGetAllSortOrderReqDto,
+    field: ProductGetAllFieldReqDto,
+  ): Promise<{ products: ProductEntity[] }> | Error;
+
+  getProduct(
+    admin: AdminHeaderReqDto,
+    data: string,
+  ): Promise<{ product: ProductEntity }> | Error;
+}
 
 @Injectable()
-export class ProductsService {
+export class ProductsService implements IProductsService {
   constructor(
     @Inject(ProductRepository)
     private readonly productRepository: ProductRepository,
@@ -30,8 +50,8 @@ export class ProductsService {
     this.logger.info(
       `${ProductsService.logInfo} Create Product with name: ${data.title}`,
     );
-    data.admin = await this.adminRepository.getById(admin.id);
     try {
+      data.admin = await this.adminRepository.getById(admin.id);
       await this.productRepository.save(data);
       this.logger.info(
         `${ProductsService.logInfo} Created Product with name: ${data.title}`,
@@ -65,7 +85,7 @@ export class ProductsService {
         order,
         field,
       );
-      if(!products.length){
+      if (!products.length) {
         this.logger.warn(
           `${ProductsService.logInfo} failed to find products for adminId: ${admin.id}`,
         );
