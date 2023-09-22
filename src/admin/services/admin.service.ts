@@ -1,9 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import {
-  AdminCreateReqDto,
-  AdminLoginReqDto,
-  AdminProfileReqDto,
-} from '../dto';
+import { AdminCreateReqDto, AdminLoginReqDto, AdminHeaderReqDto } from '../dto';
 import { AdminRepository } from '../repository/admin.repository';
 import { TokenService } from '../../utils/token/services';
 import { HashService } from '../../utils/hash/hash.service';
@@ -19,7 +15,7 @@ import { AdminUsersSeedData } from '../seed-data/admin-user.seed-data';
 export interface IAdminService {
   createAdmin(body: AdminCreateReqDto): Promise<any>;
   loginAdmin(body: AdminLoginReqDto): Promise<any>;
-  profile(body: AdminProfileReqDto): Promise<any>;
+  profile(body: AdminHeaderReqDto): Promise<any>;
 }
 
 @Injectable()
@@ -98,7 +94,7 @@ export class AdminService implements IAdminService {
     }
   }
 
-  async profile(body: AdminProfileReqDto) {
+  async profile(body: AdminHeaderReqDto) {
     this.logger.info(
       `${AdminService.logInfo} Find Admin Profile with id: ${body.id}`,
     );
@@ -107,6 +103,7 @@ export class AdminService implements IAdminService {
       this.logger.info(
         `${AdminService.logInfo} Found Admin Profile with id: ${body.id}`,
       );
+      console.log(admin);
       return admin;
     } catch (error) {
       this.logger.warn(

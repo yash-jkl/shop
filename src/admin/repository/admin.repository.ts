@@ -38,6 +38,9 @@ export class AdminRepository implements IAdminRepository {
       where: {
         id,
       },
+      relations: {
+        products: true,
+      },
     });
   }
 }

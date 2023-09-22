@@ -9,6 +9,7 @@ import {
   NotFoundException,
   authFailedException,
   emailExistsException,
+  passwordMismatchException,
 } from '../../errors';
 import { mockHashService, mockTokenService } from '../mocks';
 import {
@@ -18,6 +19,7 @@ import {
   userProfileInput,
   token,
   userOutputWithToken,
+  validChangePassword,
 } from '../constants';
 import { EmailService } from '../../../utils/email/email.service';
 import { mockEmailService } from '../mocks/email.service.mock';
@@ -134,6 +136,37 @@ describe('UserService', () => {
         fail('NotFoundException not thrown');
       } catch (error) {
         expect(error).toBeInstanceOf(NotFoundException);
+      }
+    });
+  });
+
+  describe('Change Password Test', () => {
+    it('when password change succeds', async () => {
+      userRepository.getById.mockReturnValue(userOutput);
+      hashService.compare.mockResolvedValue(true);
+      hashService.hash.mockResolvedValue('newHashedPassword');
+      userRepository.updateUser.mockResolvedValue();
+      await userService.changePassword(userProfileInput, validChangePassword);
+      expect(userRepository.updateUser).toHaveBeenCalledWith(userOutput);
+    });
+    it('Throw NotFoundException When ID Doesnt Exists', async () => {
+      userRepository.getById.mockRejectedValue(new NotFoundException());
+      try {
+        await userService.changePassword(userProfileInput, validChangePassword);
+        fail('NotFoundException not thrown');
+      } catch (error) {
+        expect(error).toBeInstanceOf(NotFoundException);
+      }
+    });
+    it('Throw NotFoundException When ID Doesnt Exists', async () => {
+      userRepository.getById.mockReturnValue(userOutput);
+      hashService.compare.mockResolvedValue(false);
+      hashService.hash.mockResolvedValue('newHashedPassword');
+      try {
+        await userService.changePassword(userProfileInput, validChangePassword);
+        fail('passwordMismatchException not thrown');
+      } catch (error) {
+        expect(error).toBeInstanceOf(passwordMismatchException);
       }
     });
   });

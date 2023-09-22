@@ -4,4 +4,5 @@ export const mockUserService = (): IUserService => ({
   createUser: jest.fn(),
   loginUser: jest.fn(),
   profile: jest.fn(),
+  changePassword: jest.fn(),
 });

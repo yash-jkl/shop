@@ -1,45 +1,48 @@
-import { ProductEntity } from '../../products/entities';
+import { AdminEntity } from '../../admin/entities';
 import {
   BaseEntity,
   BeforeInsert,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
   Index,
-  OneToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
-  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 @Entity({
-  name: 'admin',
+  name: 'product',
 })
-@Unique(['email'])
-export class AdminEntity extends BaseEntity {
+export class ProductEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({
-    nullable: true,
-    name: 'first_name',
-  })
-  firstName: string;
-
-  @Column({
-    nullable: true,
-    name: 'last_name',
-  })
-  lastName: string;
-
-  @Column()
   @Index()
-  email: string;
+  @Column({
+    name: 'title',
+  })
+  title: string;
 
+  @Column({
+    nullable: true,
+    name: 'description',
+  })
+  description: string;
+
+  @Index()
   @Column()
-  password: string;
+  price: number;
+
+  @Index()
+  @Column({
+    name: 'is_available',
+    default: true,
+  })
+  isAvailable: boolean;
 
   @CreateDateColumn({
     name: 'created_at',
@@ -59,15 +62,21 @@ export class AdminEntity extends BaseEntity {
   })
   deletedAt: Date;
 
-  @OneToMany(() => ProductEntity, (product) => product.admin, {
-    nullable: false,
-  })
-  products: ProductEntity[];
+  @ManyToOne(() => AdminEntity, (admin) => admin.products)
+  admin: AdminEntity;
 
   @BeforeInsert()
   generateId() {
     if (!this.id) {
       this.id = uuidv4();
+    }
+  }
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  validateAdminData() {
+    if (!this.admin) {
+      throw new Error('Admin data is required for ProductEntity.');
     }
   }
 }

@@ -1,7 +1,7 @@
 import {
   AdminCreateReqDto,
   AdminLoginReqDto,
-  AdminProfileReqDto,
+  AdminHeaderReqDto,
 } from '../../dto';
 import { UserType } from '../../../utils/token/types';
 
@@ -28,7 +28,7 @@ export const loginAdminInput: AdminLoginReqDto = {
   password: '123456',
 };
 
-export const adminProfileInput: AdminProfileReqDto = {
+export const adminProfileInput: AdminHeaderReqDto = {
   id: '929270f8-f62e-4580-8533-10d473ce520a',
   userType: UserType.ADMIN,
   email: 'john@doe.com',

@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../entities';
 import { Repository } from 'typeorm/repository/Repository';
 import { UserCreateReqDto } from '../dto';
+import { UpdateResult } from 'typeorm';
 
 export interface IUserRepository {
   save(userEntity: UserEntity): Promise<UserEntity>;
@@ -10,6 +11,8 @@ export interface IUserRepository {
   getByEmail(email: string): Promise<UserEntity>;
 
   getById(id: string): Promise<UserEntity>;
+
+  updateUser(data: UserEntity): Promise<UpdateResult>;
 }
 
 @Injectable()
@@ -38,5 +41,16 @@ export class UserRepository implements IUserRepository {
         id,
       },
     });
+  }
+
+  async updateUser(data: UserEntity): Promise<UpdateResult> {
+    return await this.userEntity.update(
+      {
+        id: data.id,
+      },
+      {
+        ...data,
+      },
+    );
   }
 }

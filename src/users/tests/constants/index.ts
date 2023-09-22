@@ -1,8 +1,4 @@
-import {
-  UserCreateReqDto,
-  UserLoginReqDto,
-  UserProfileReqDto,
-} from '../../dto';
+import { UserCreateReqDto, UserLoginReqDto, UserHeaderReqDto } from '../../dto';
 import { UserType } from '../../../utils/token/types';
 
 export const createUserInput: UserCreateReqDto = {
@@ -28,7 +24,7 @@ export const loginUserInput: UserLoginReqDto = {
   password: '123456',
 };
 
-export const userProfileInput: UserProfileReqDto = {
+export const userProfileInput: UserHeaderReqDto = {
   id: '929270f8-f62e-4580-8533-10d473ce520a',
   userType: UserType.USER,
   email: 'john@doe.com',
@@ -73,4 +69,9 @@ export const validInputLogin = {
 export const invalidInputLogin = {
   email: 'johndoe.com',
   password: '123456',
+};
+
+export const validChangePassword = {
+  oldPassword: '123456',
+  newPassword: '123456',
 };

@@ -22,7 +22,7 @@ import {
   AdminCreateReqDto,
   AdminLoginReqDto,
   AdminLoginResDto,
-  AdminProfileReqDto,
+  AdminHeaderReqDto,
   AdminProfileResDto,
 } from './dto';
 
@@ -84,7 +84,7 @@ export class AdminController {
     description: 'when user not found',
   })
   @Get('/profile')
-  async profile(@Headers('user') user: AdminProfileReqDto) {
+  async profile(@Headers('user') user: AdminHeaderReqDto) {
     return this.adminService.profile(user);
   }
 }
