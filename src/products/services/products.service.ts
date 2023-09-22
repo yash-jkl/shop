@@ -3,13 +3,13 @@ import { AdminHeaderReqDto } from '../../admin/dto';
 import { ProductCreateReqDto } from '../dto/request/product-create.dto';
 import { ProductRepository } from '../repository/product.repository';
 import { LoggerService } from '../../utils/logger/winstonLogger';
-import { DatabaseConnectionException } from '../errors';
+import { DatabaseConnectionException, NotFoundException } from '../errors';
 import { AdminRepository } from '../../admin/repository/admin.repository';
 import {
-  ProductGetFieldReqDto,
-  ProductGetLimitReqDto,
-  ProductGetPageReqDto,
-  ProductGetSortOrderReqDto,
+  ProductGetAllFieldReqDto,
+  ProductGetAllLimitReqDto,
+  ProductGetAllPageReqDto,
+  ProductGetAllSortOrderReqDto,
 } from '../dto';
 
 @Injectable()
@@ -48,28 +48,27 @@ export class ProductsService {
 
   async getProducts(
     admin: AdminHeaderReqDto,
-    page: ProductGetPageReqDto,
-    limit: ProductGetLimitReqDto,
-    order: ProductGetSortOrderReqDto,
-    field: ProductGetFieldReqDto,
+    page: ProductGetAllPageReqDto,
+    limit: ProductGetAllLimitReqDto,
+    order: ProductGetAllSortOrderReqDto,
+    field: ProductGetAllFieldReqDto,
   ) {
     this.logger.info(
       `${ProductsService.logInfo} Getting Products for admin with Id: ${admin.id}`,
     );
     const skip = (+page - 1) * +limit;
-    this.logger.info(
-      `${ProductsService.logInfo} Found Products for admin with Id: ${admin.id}`,
-    );
     try {
-      return {
-        products: await this.productRepository.getByAdmin(
-          admin.id,
-          +limit,
-          skip,
-          order,
-          field,
-        ),
-      };
+      const products = await this.productRepository.getByAdmin(
+        admin.id,
+        +limit,
+        skip,
+        order,
+        field,
+      );
+      this.logger.info(
+        `${ProductsService.logInfo} Found Products for admin with Id: ${admin.id}`,
+      );
+      return { products };
     } catch (error) {
       this.logger.error(
         `${ProductsService.logInfo} failed to find products for adminId: ${admin.id}`,
@@ -77,5 +76,17 @@ export class ProductsService {
       );
       throw new DatabaseConnectionException();
     }
+  }
+
+  async getProduct(admin: AdminHeaderReqDto, data: string) {
+    this.logger.info(
+      `${ProductsService.logInfo} Getting Product with Id: ${data}`,
+    );
+    const product = await this.productRepository.getById(admin.id, data);
+    if (!product?.id) throw new NotFoundException();
+    this.logger.info(
+      `${ProductsService.logInfo} Found Product with Id: ${data}`,
+    );
+    return { product };
   }
 }

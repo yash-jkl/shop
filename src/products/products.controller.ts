@@ -7,6 +7,7 @@ import {
   Headers,
   Get,
   Query,
+  Param,
 } from '@nestjs/common';
 import { Auth } from '../utils/decorators/auth.decorator';
 import { AuthType } from '../utils/token/types';
@@ -22,12 +23,13 @@ import { Serialize } from 'src/utils/loaders/SerializeDto';
 import { AdminHeaderReqDto } from 'src/admin/dto';
 import {
   ProductCreateReqDto,
-  ProductsResDto,
-  ProductGetLimitReqDto,
-  ProductGetPageReqDto,
-  ProductGetSortOrderReqDto,
-  ProductGetFieldReqDto,
+  ProductsAllResDto,
+  ProductGetAllLimitReqDto,
+  ProductGetAllPageReqDto,
+  ProductGetAllSortOrderReqDto,
+  ProductGetAllFieldReqDto,
 } from './dto';
+import { ProductResDto } from './dto/response/get-product.dto';
 
 @ApiTags('Product')
 @Auth(AuthType.AdminBearer)
@@ -57,13 +59,13 @@ export class ProductsController {
     return this.productsService.createProduct(admin, body);
   }
 
-  @Serialize(ProductsResDto)
+  @Serialize(ProductsAllResDto)
   @ApiResponse({
     description: 'for more information please check ProductCreateReqDto schema',
   })
   @ApiOkResponse({
     description: 'Retrived Products successfully',
-    type: ProductsResDto,
+    type: ProductsAllResDto,
     status: 201,
   })
   @ApiBadRequestResponse({
@@ -73,12 +75,12 @@ export class ProductsController {
   @ApiBearerAuth()
   @HttpCode(HttpStatus.FOUND)
   @Get()
-  async getProduct(
+  async getProducts(
     @Headers('user') admin: AdminHeaderReqDto,
-    @Query('page') page: ProductGetPageReqDto,
-    @Query('limit') limit: ProductGetLimitReqDto,
-    @Query('sortOrder') sortOrder: ProductGetSortOrderReqDto,
-    @Query('sortField') sortField: ProductGetFieldReqDto,
+    @Query('page') page: ProductGetAllPageReqDto,
+    @Query('limit') limit: ProductGetAllLimitReqDto,
+    @Query('sortOrder') sortOrder: ProductGetAllSortOrderReqDto,
+    @Query('sortField') sortField: ProductGetAllFieldReqDto,
   ) {
     return this.productsService.getProducts(
       admin,
@@ -87,5 +89,28 @@ export class ProductsController {
       sortOrder,
       sortField,
     );
+  }
+
+  @Serialize(ProductResDto)
+  @ApiResponse({
+    description: 'for more information please check ProductCreateReqDto schema',
+  })
+  @ApiOkResponse({
+    description: 'Retrived Product successfully',
+    type: ProductResDto,
+    status: 201,
+  })
+  @ApiBadRequestResponse({
+    description: 'database error',
+    status: 500,
+  })
+  @ApiBearerAuth()
+  @HttpCode(HttpStatus.FOUND)
+  @Get(':id')
+  async getProduct(
+    @Headers('user') admin: AdminHeaderReqDto,
+    @Param('id') id: string,
+  ) {
+    return this.productsService.getProduct(admin, id);
   }
 }

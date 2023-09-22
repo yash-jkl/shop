@@ -4,21 +4,21 @@ import { ProductEntity } from '../entities';
 import { Repository } from 'typeorm/repository/Repository';
 import {
   ProductCreateReqDto,
-  ProductGetFieldReqDto,
-  ProductGetSortOrderReqDto,
+  ProductGetAllFieldReqDto,
+  ProductGetAllSortOrderReqDto,
 } from '../dto';
 import { UpdateResult } from 'typeorm';
 
 export interface IProductRepository {
   save(productEntity: ProductEntity): Promise<ProductEntity>;
-  getById(id: string): Promise<ProductEntity | undefined>;
+  getById(adminId: string, id: string): Promise<ProductEntity | undefined>;
   updateProduct(data: ProductEntity): Promise<UpdateResult>;
   getByAdmin(
     adminId: string,
     limit: number,
     skip: number,
-    sortOrderDto: ProductGetSortOrderReqDto,
-    sortField: ProductGetFieldReqDto,
+    sortOrderDto: ProductGetAllSortOrderReqDto,
+    sortField: ProductGetAllFieldReqDto,
   ): Promise<ProductEntity[]>;
 }
 
@@ -34,12 +34,13 @@ export class ProductRepository implements IProductRepository {
     return await this.productEntity.save(product);
   }
 
-  async getById(id: string): Promise<ProductEntity> {
-    return await this.productEntity.findOneOrFail({
-      where: {
-        id,
-      },
-    });
+  async getById(adminId: string, id: string): Promise<ProductEntity> {
+    return await this.productEntity
+      .createQueryBuilder('product')
+      .innerJoin('product.admin', 'admin')
+      .where('product.id = :id', { id })
+      .andWhere('admin.id = :adminId', { adminId })
+      .getOne();
   }
 
   async updateProduct(data: ProductEntity): Promise<UpdateResult> {
@@ -57,8 +58,8 @@ export class ProductRepository implements IProductRepository {
     adminId: string,
     limit: number,
     skip: number,
-    sortOrderDto: ProductGetSortOrderReqDto,
-    sortField: ProductGetFieldReqDto,
+    sortOrderDto: ProductGetAllSortOrderReqDto,
+    sortField: ProductGetAllFieldReqDto,
   ): Promise<ProductEntity[]> {
     const sortOrder: any = sortOrderDto;
     return await this.productEntity

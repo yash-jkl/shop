@@ -1,16 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
 import { IsUUID, IsString, IsNumber, IsBoolean } from 'class-validator';
+import { productExample } from '../../constants';
 
-const example = [
-  {
-    id: '2e17ae4b-c348-4e57-8724-066860c22b43',
-    title: 'book',
-    description: 'A very nice book',
-    price: 250,
-    isAvailable: true,
-  },
-];
+delete productExample.description;
+
+const example = [productExample];
 export class Product {
   @Expose()
   @IsUUID()
@@ -21,10 +16,6 @@ export class Product {
   title: string;
 
   @Expose()
-  @IsString()
-  description: string;
-
-  @Expose()
   @IsNumber()
   price: number;
 
@@ -33,7 +24,7 @@ export class Product {
   isAvailable: boolean;
 }
 
-export class ProductsResDto {
+export class ProductsAllResDto {
   @Expose()
   @ApiProperty({ type: [Product], example })
   @Type(() => Product)

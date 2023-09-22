@@ -1,46 +1,15 @@
-import { IsEnum, IsNumberString, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { SortOrder } from '../../../utils/constants';
-import { ProductField } from '../../constants';
+import { IsNotBlank } from '../../../utils/decorators';
 
-export class ProductGetSortOrderReqDto {
+export class ProductGetReqDto {
+  @IsNotBlank()
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(255)
   @ApiProperty({
-    enum: ['ASC', 'DESC'],
-    default: SortOrder.Ascending,
-    example: SortOrder.Ascending,
+    example: '2e17ae4b-c348-4e57-8724-066860c22b43',
+    maxLength: 255,
   })
-  @IsEnum(SortOrder)
-  @IsOptional()
-  sortOrder: SortOrder;
-}
-
-export class ProductGetPageReqDto {
-  @ApiProperty({
-    example: '1',
-    default: '1',
-  })
-  @IsNumberString()
-  @IsOptional()
-  page: string;
-}
-
-export class ProductGetLimitReqDto {
-  @ApiProperty({
-    example: '10',
-    default: '10',
-  })
-  @IsNumberString()
-  @IsOptional()
-  limit: string;
-}
-
-export class ProductGetFieldReqDto {
-  @ApiProperty({
-    enum: ProductField,
-    default: ProductField.title,
-    example: ProductField.title,
-  })
-  @IsEnum(ProductField)
-  @IsOptional()
-  sortField: ProductField;
+  id: string;
 }
