@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { SortOrder } from '../../../utils/constants';
 import { ProductField } from '../../../utils/constants';
 
-export class ProductGetAllSortOrderReqDto {
+export class ShopGetAllSortOrderReqDto {
   @ApiProperty({
     enum: ['ASC', 'DESC'],
     default: SortOrder.Ascending,
@@ -14,7 +14,7 @@ export class ProductGetAllSortOrderReqDto {
   sortOrder: SortOrder;
 }
 
-export class ProductGetAllPageReqDto {
+export class ShopGetAllPageReqDto {
   @ApiProperty({
     example: '1',
     default: '1',
@@ -24,7 +24,7 @@ export class ProductGetAllPageReqDto {
   page: string;
 }
 
-export class ProductGetAllLimitReqDto {
+export class ShopGetAllLimitReqDto {
   @ApiProperty({
     example: '10',
     default: '10',
@@ -34,7 +34,7 @@ export class ProductGetAllLimitReqDto {
   limit: string;
 }
 
-export class ProductGetAllFieldReqDto {
+export class ShopGetAllFieldReqDto {
   @ApiProperty({
     enum: ProductField,
     default: ProductField.title,
