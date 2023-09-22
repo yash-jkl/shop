@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
 import { IsUUID, IsString, IsNumber, IsBoolean } from 'class-validator';
-import { productExample } from '../../constants';
+import { productExample } from '../../../utils/constants';
 
 delete productExample.description;
 
