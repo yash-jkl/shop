@@ -65,6 +65,12 @@ export class ProductsService {
         order,
         field,
       );
+      if(!products.length){
+        this.logger.warn(
+          `${ProductsService.logInfo} failed to find products for adminId: ${admin.id}`,
+        );
+        throw new NotFoundException();
+      }
       this.logger.info(
         `${ProductsService.logInfo} Found Products for admin with Id: ${admin.id}`,
       );
@@ -83,7 +89,12 @@ export class ProductsService {
       `${ProductsService.logInfo} Getting Product with Id: ${data}`,
     );
     const product = await this.productRepository.getById(admin.id, data);
-    if (!product?.id) throw new NotFoundException();
+    if (!product?.id) {
+      this.logger.warn(
+        `${ProductsService.logInfo} failed to find product for adminId: ${admin.id} and productid: ${data}`,
+      );
+      throw new NotFoundException();
+    }
     this.logger.info(
       `${ProductsService.logInfo} Found Product with Id: ${data}`,
     );
