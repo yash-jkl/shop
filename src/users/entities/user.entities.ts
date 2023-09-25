@@ -1,3 +1,4 @@
+import { CartEntity } from 'src/cart/entities/cart.entities';
 import {
   BeforeInsert,
   Column,
@@ -5,6 +6,7 @@ import {
   DeleteDateColumn,
   Entity,
   Index,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
   UpdateDateColumn,
@@ -20,13 +22,13 @@ export class UserEntity {
   id: string;
 
   @Column({
-    nullable: true,
+    nullable: false,
     name: 'first_name',
   })
   firstName: string;
 
   @Column({
-    nullable: true,
+    nullable: false,
     name: 'last_name',
   })
   lastName: string;
@@ -55,6 +57,11 @@ export class UserEntity {
     type: 'timestamp',
   })
   deletedAt: Date;
+
+  @OneToMany(() => CartEntity, (cart) => cart.user, {
+    nullable: true,
+  })
+  cart: CartEntity[];
 
   @BeforeInsert()
   generateId() {
