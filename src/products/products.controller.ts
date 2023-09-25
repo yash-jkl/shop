@@ -19,8 +19,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { ProductsService } from './services/products.service';
-import { Serialize } from 'src/utils/loaders/SerializeDto';
-import { AdminHeaderReqDto } from 'src/admin/dto';
+import { Serialize } from '../utils/loaders/SerializeDto';
+import { AdminHeaderReqDto } from '../admin/dto';
 import {
   ProductCreateReqDto,
   ProductsAllResDto,

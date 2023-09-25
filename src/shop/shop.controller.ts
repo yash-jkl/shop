@@ -7,7 +7,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { ShopService } from './services/shop.service';
-import { Serialize } from 'src/utils/loaders/SerializeDto';
+import { Serialize } from '../utils/loaders/SerializeDto';
 import {
   ProductsAllResDto,
   ShopGetAllFieldReqDto,
