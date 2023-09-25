@@ -41,7 +41,12 @@ describe('Shop Controller', () => {
     it('Invalid fields should throw Not Found Exception', async () => {
       try {
         shopService.getProducts.mockRejectedValue(new NotFoundException());
-        await shopController.getProduct(productId);
+        await shopController.getProducts(
+          '1',
+          '1',
+          SortOrder.Ascending,
+          ProductField.title,
+        );
       } catch (error) {
         expect(error).toBeInstanceOf(NotFoundException);
       }
