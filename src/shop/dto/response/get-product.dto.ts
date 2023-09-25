@@ -11,7 +11,6 @@ import { productExample } from '../../../utils/constants';
 
 productExample.createdAt = '2023-09-20T06:31:18.061Z';
 productExample.updatedAt = '2023-09-20T06:31:18.061Z';
-const example = [productExample];
 
 class Product {
   @Expose()
@@ -44,7 +43,7 @@ class Product {
 
 export class ProductResDto {
   @Expose()
-  @ApiProperty({ type: Product, example })
+  @ApiProperty({ type: Product, example: productExample })
   @Type(() => Product)
   product: Product;
 }

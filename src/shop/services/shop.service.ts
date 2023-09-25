@@ -22,7 +22,7 @@ export interface IShopService {
 }
 
 @Injectable()
-export class ShopService {
+export class ShopService implements IShopService {
   constructor(
     @Inject(ShopRepository)
     private readonly shopRepository: ShopRepository,
@@ -64,14 +64,18 @@ export class ShopService {
 
   async getProduct(data: string) {
     this.logger.info(`${ShopService.logInfo} Getting Product with Id: ${data}`);
-    const product = await this.shopRepository.getById(data);
-    if (!product?.id) {
+    try {
+      const product = await this.shopRepository.getById(data);
+      if (!product?.id) {
+        throw new NotFoundException();
+      }
+      this.logger.info(`${ShopService.logInfo} Found Product with Id: ${data}`);
+      return { product };
+    } catch {
       this.logger.warn(
         `${ShopService.logInfo} failed to find product for productid: ${data}`,
       );
       throw new NotFoundException();
     }
-    this.logger.info(`${ShopService.logInfo} Found Product with Id: ${data}`);
-    return { product };
   }
 }
