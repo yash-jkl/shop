@@ -22,7 +22,7 @@ export interface IShopService {
 }
 
 @Injectable()
-export class ShopService {
+export class ShopService implements IShopService {
   constructor(
     @Inject(ShopRepository)
     private readonly shopRepository: ShopRepository,
