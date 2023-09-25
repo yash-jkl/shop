@@ -5,7 +5,9 @@ import { Repository } from 'typeorm/repository/Repository';
 import { NotFoundException } from '../errors';
 
 export interface ICartRepository {
-  getCart(userId: string): Promise<CartEntity[] | null>;
+  getCart(
+    userId: string,
+  ): Promise<{ cartItems: CartEntity[]; totalCount: number } | null>;
   addItem(userId: string, productId: string, quantity: number): Promise<void>;
   removeItemFromCart(
     userId: string,
@@ -22,12 +24,15 @@ export class CartRepository implements ICartRepository {
     private readonly cartEntity: Repository<CartEntity>,
   ) {}
 
-  async getCart(userId: string): Promise<CartEntity[] | null> {
-    return await this.cartEntity
+  async getCart(
+    userId: string,
+  ): Promise<{ cartItems: CartEntity[]; totalCount: number } | null> {
+    const [cartItems, totalCount] = await this.cartEntity
       .createQueryBuilder('cart')
       .innerJoin('cart.user', 'user')
       .where('user.id = :userId', { userId })
-      .getMany();
+      .getManyAndCount();
+    return { cartItems, totalCount };
   }
 
   async addItem(
