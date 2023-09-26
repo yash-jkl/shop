@@ -1,3 +1,4 @@
+import { CartEntity } from 'src/cart/entities/cart.entities';
 import { AdminEntity } from '../../admin/entities';
 import {
   BaseEntity,
@@ -9,6 +10,7 @@ import {
   Entity,
   Index,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -24,6 +26,7 @@ export class ProductEntity extends BaseEntity {
   @Index()
   @Column({
     name: 'title',
+    nullable: false,
   })
   title: string;
 
@@ -34,7 +37,9 @@ export class ProductEntity extends BaseEntity {
   description: string;
 
   @Index()
-  @Column()
+  @Column({
+    nullable: false,
+  })
   price: number;
 
   @Index()
@@ -64,6 +69,11 @@ export class ProductEntity extends BaseEntity {
 
   @ManyToOne(() => AdminEntity, (admin) => admin.products)
   admin: AdminEntity;
+
+  @OneToMany(() => CartEntity, (cart) => cart.product, {
+    nullable: true,
+  })
+  cart: CartEntity[];
 
   @BeforeInsert()
   generateId() {
