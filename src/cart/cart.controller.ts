@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Headers,
   HttpCode,
@@ -96,5 +97,21 @@ export class CartController {
     @Body() body: AddToCartReqDto,
   ) {
     return this.cartService.removeItemFromCart(user, body);
+  }
+
+  @Serialize()
+  @ApiOkResponse({
+    description: 'When cart removed successfully',
+    status: 201,
+  })
+  @ApiBadRequestResponse({
+    description: 'Not Found Exception',
+    status: 404,
+  })
+  @ApiBearerAuth()
+  @HttpCode(HttpStatus.OK)
+  @Delete('')
+  async deleteCart(@Headers('user') user: UserHeaderReqDto) {
+    return this.cartService.deleteCart(user);
   }
 }

@@ -85,4 +85,22 @@ export class CartService implements ICartService {
     );
     return;
   }
+
+  async deleteCart(user: UserHeaderReqDto) {
+    this.logger.info(
+      `${CartService.logInfo} Removed cart for user id: ${user.id}`,
+    );
+    try {
+      await this.cartRepository.deleteCartItems(user.id);
+    } catch (error) {
+      this.logger.warn(
+        `${CartService.logInfo} Removed cart for user id: ${user.id} failed`,
+      );
+      throw new NotFoundException();
+    }
+    this.logger.info(
+      `${CartService.logInfo} Removed cart of user id: ${user.id}`,
+    );
+    return;
+  }
 }
