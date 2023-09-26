@@ -35,7 +35,7 @@ export class CartController {
 
   @Serialize()
   @ApiResponse({
-    description: 'for more information please check ProductCreateReqDto schema',
+    description: 'for more information please check AddToCartReqDto schema',
   })
   @ApiOkResponse({
     description: 'When Product added to cart successfully',
@@ -74,5 +74,27 @@ export class CartController {
     @Query('limit') limit: CartGetAllLimitReqDto,
   ) {
     return this.cartService.getCart(user, page, limit);
+  }
+
+  @Serialize()
+  @ApiResponse({
+    description: 'for more information please check AddToCartReqDto schema',
+  })
+  @ApiOkResponse({
+    description: 'When Item removed from cart successfully',
+    status: 201,
+  })
+  @ApiBadRequestResponse({
+    description: 'Not Found Exception',
+    status: 404,
+  })
+  @ApiBearerAuth()
+  @HttpCode(HttpStatus.OK)
+  @Post('/remove-from-cart')
+  async removeFromCart(
+    @Headers('user') user: UserHeaderReqDto,
+    @Body() body: AddToCartReqDto,
+  ) {
+    return this.cartService.removeItemFromCart(user, body);
   }
 }

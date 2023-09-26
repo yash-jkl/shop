@@ -81,8 +81,8 @@ export class CartRepository implements ICartRepository {
     if (!cartItem) {
       throw new NotFoundException();
     }
-    cartItem.quantity -= quantity;
-    if (cartItem.quantity > 0) {
+    if (cartItem.quantity > quantity) {
+      cartItem.quantity -= quantity;
       await cartItem.save();
     } else {
       await this.cartEntity.remove(cartItem);

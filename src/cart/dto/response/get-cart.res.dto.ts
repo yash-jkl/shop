@@ -7,6 +7,7 @@ const data = {
   cartItems: [
     {
       product: {
+        id: productExample.id,
         title: productExample.title,
         price: productExample.price,
         isAvailable: productExample.isAvailable,
@@ -17,6 +18,10 @@ const data = {
 };
 
 export class Product {
+  @Expose()
+  @IsString()
+  id: string;
+
   @Expose()
   @IsString()
   title: string;
