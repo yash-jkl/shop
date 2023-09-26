@@ -7,6 +7,7 @@ import { ProductEntity } from '../products/entities';
 import { UserEntity } from '../users/entities';
 import { LoggerModule } from '../utils/logger/logger.module';
 import { CartRepository } from './repository/cart.repository';
+import { Helper } from './helper/helper';
 
 @Module({
   imports: [
@@ -14,6 +15,6 @@ import { CartRepository } from './repository/cart.repository';
     LoggerModule,
   ],
   controllers: [CartController],
-  providers: [CartService, CartRepository],
+  providers: [CartService, CartRepository, Helper],
 })
 export class CartModule {}

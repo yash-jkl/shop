@@ -13,6 +13,7 @@ const data = {
         isAvailable: productExample.isAvailable,
       },
       quantity: 1,
+      amount: 1 * productExample.price,
     },
   ],
 };
@@ -35,7 +36,7 @@ export class Product {
   isAvailable: boolean;
 }
 
-export class getProduct {
+export class getFinalProduct {
   @Expose()
   @ApiProperty({ type: Product })
   @Type(() => Product)
@@ -46,15 +47,25 @@ export class getProduct {
     example: 1,
   })
   quantity: number;
+
+  @Expose()
+  @ApiProperty({
+    example: 250,
+  })
+  amount: number;
 }
 
-export class getCartResDto {
+export class getFinalCartResDto {
   @Expose()
-  @ApiProperty({ type: [getProduct], example: data })
-  @Type(() => getProduct)
-  cartItems: Array<getProduct>;
+  @ApiProperty({ type: [getFinalProduct], example: data })
+  @Type(() => getFinalProduct)
+  items: Array<getFinalProduct>;
 
   @Expose()
-  @ApiProperty({ example: 2 })
-  totalCount: number;
+  @ApiProperty({ example: 250 })
+  total: number;
+
+  @Expose()
+  @ApiProperty({ example: 1 })
+  totalItems: number;
 }
