@@ -7,6 +7,8 @@ import { NotFoundException } from '../errors';
 export interface ICartRepository {
   getCart(
     userId: string,
+    skip: number,
+    limit: number,
   ): Promise<{ cartItems: CartEntity[]; totalCount: number } | null>;
   addItem(userId: string, productId: string, quantity: number): Promise<void>;
   removeItemFromCart(
@@ -26,11 +28,16 @@ export class CartRepository implements ICartRepository {
 
   async getCart(
     userId: string,
+    skip: number,
+    limit: number,
   ): Promise<{ cartItems: CartEntity[]; totalCount: number } | null> {
     const [cartItems, totalCount] = await this.cartEntity
       .createQueryBuilder('cart')
       .innerJoin('cart.user', 'user')
+      .innerJoinAndSelect('cart.product', 'product')
       .where('user.id = :userId', { userId })
+      .skip(skip)
+      .take(limit)
       .getManyAndCount();
     return { cartItems, totalCount };
   }
