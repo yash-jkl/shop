@@ -51,7 +51,6 @@ export class CartService implements ICartService {
     const skip = (+page - 1) * +limit;
     try {
       const cart = await this.cartRepository.getCart(user.id, skip, +limit);
-      console.log('Cart', cart);
       this.logger.info(
         `${CartService.logInfo} Got Cart for user id: ${user.id}`,
       );
