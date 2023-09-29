@@ -90,4 +90,15 @@ export class CartRepository implements ICartRepository {
       .getManyAndCount();
     return { cartItems, totalCount };
   }
+
+  async checkout(userId: string): Promise<CartEntity[] | null> {
+    const checkout = await this.cartEntity
+      .createQueryBuilder('cart')
+      .select(['product.title', 'product.price', 'cart.quantity'])
+      .innerJoin('cart.user', 'user')
+      .innerJoin('cart.product', 'product')
+      .where('user.id = :userId', { userId })
+      .getMany();
+    return checkout;
+  }
 }

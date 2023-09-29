@@ -16,8 +16,8 @@ export class StripeService {
       payment_method_types: ['card'],
       line_items: items,
       mode: 'payment',
-      success_url: 'http://localhost:3001/docs',
-      cancel_url: 'http://localhost:3001/docs',
+      success_url: 'http://localhost:3001/swagger',
+      cancel_url: 'http://localhost:3001/swagger',
       customer_email: user.email,
     });
     return session;
