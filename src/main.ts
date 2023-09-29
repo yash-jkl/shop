@@ -7,7 +7,7 @@ import { env } from './env';
 import { ExceptionHandlerFilter } from './utils/error/exception-handler.filter';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { rawBody: true });
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
   app.use(bodyParser.json({ limit: '2mb' }));

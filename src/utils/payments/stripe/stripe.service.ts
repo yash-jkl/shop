@@ -23,21 +23,43 @@ export class StripeService {
     return session;
   }
 
-  async verifyPayment(data, signature): Promise<boolean> {
+  async verifyPayment(data, signature): Promise<number> {
+    console.log('Stripe service')
     try {
+      console.log('data', data)
+      console.log('************************')
+      console.log('signature', signature)
+      console.log('************************')
+      console.log('endPointSecrert', env.payments.stripe.endPointSecrert)
+      console.log('************************')
       const event = this.stripe.webhooks.constructEvent(
         data,
         signature,
-        env.payments.stripe.endPointSecrert,
+        env.payments.stripe.endPointSecrert
       );
+      console.log('event')
+      console.log(event)
 
-      if (event.type === 'invoice.payment_succeeded') {
-        return true;
-      } else {
-        throw new Error();
+      switch (event.type) {
+        case 'checkout.session.async_payment_failed':
+          const checkoutSessionAsyncPaymentFailed = event.data.object;
+          return 0
+        case 'checkout.session.async_payment_succeeded':
+          const checkoutSessionAsyncPaymentSucceeded = event.data.object;
+          return 1
+        case 'checkout.session.completed':
+          const checkoutSessionCompleted = event.data.object;
+          return 2
+        case 'checkout.session.expired':
+          const checkoutSessionExpired = event.data.object;
+          return -1
+        // ... handle other event types
+        default:
+          console.log(`Unhandled event type ${event.type}`);
       }
     } catch (error) {
-      return false;
+      console.log('error', error)
+      return -1;
     }
   }
 }
