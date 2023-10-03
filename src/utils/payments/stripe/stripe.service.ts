@@ -13,6 +13,7 @@ export class StripeService {
 
   async createCheckOutSession(user, items: any[]): Promise<any> {
     const session = await this.stripe.checkout.sessions.create({
+      client_reference_id: '1234566',
       payment_method_types: ['card'],
       line_items: items,
       mode: 'payment',
@@ -23,43 +24,46 @@ export class StripeService {
     return session;
   }
 
-  async verifyPayment(data, signature): Promise<number> {
-    console.log('Stripe service')
+  async verifyPayment(data, signature): Promise<boolean> {
+    console.log('Stripe service');
     try {
-      console.log('data', data)
-      console.log('************************')
-      console.log('signature', signature)
-      console.log('************************')
-      console.log('endPointSecrert', env.payments.stripe.endPointSecrert)
-      console.log('************************')
       const event = this.stripe.webhooks.constructEvent(
         data,
         signature,
-        env.payments.stripe.endPointSecrert
+        env.payments.stripe.endPointSecrert,
       );
-      console.log('event')
-      console.log(event)
+      console.log('event');
+      const eventData: any = event.data.object;
+      console.log(eventData?.id as any);
+      const sessionWithLineItems = await this.stripe.checkout.sessions.retrieve(
+        eventData?.id,
+        {
+          expand: ['line_items'],
+        },
+      );
+      const lineItems = sessionWithLineItems.line_items;
+      console.log(...lineItems.data);
 
       switch (event.type) {
         case 'checkout.session.async_payment_failed':
           const checkoutSessionAsyncPaymentFailed = event.data.object;
-          return 0
+          return false;
         case 'checkout.session.async_payment_succeeded':
           const checkoutSessionAsyncPaymentSucceeded = event.data.object;
-          return 1
+          return true;
         case 'checkout.session.completed':
           const checkoutSessionCompleted = event.data.object;
-          return 2
+          return true;
         case 'checkout.session.expired':
           const checkoutSessionExpired = event.data.object;
-          return -1
+          return false;
         // ... handle other event types
         default:
           console.log(`Unhandled event type ${event.type}`);
       }
     } catch (error) {
-      console.log('error', error)
-      return -1;
+      console.log('error', error);
+      return false;
     }
   }
 }

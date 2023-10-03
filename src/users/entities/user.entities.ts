@@ -1,4 +1,4 @@
-import { CartEntity } from 'src/cart/entities/cart.entities';
+import { CartEntity } from '../../cart/entities/cart.entities';
 import {
   BeforeInsert,
   Column,

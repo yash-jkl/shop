@@ -15,16 +15,11 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Auth } from 'src/utils/decorators/auth.decorator';
-import { AuthType } from 'src/utils/token/types';
+import { Auth } from '../utils/decorators/auth.decorator';
+import { AuthType } from '../utils/token/types';
 import { CartService } from './services/cart.service';
-import { Serialize } from 'src/utils/loaders/SerializeDto';
-import {
-  AddToCartReqDto,
-  UserHeaderReqDto,
-  checkCartResDto,
-  getFinalCartResDto,
-} from './dto';
+import { Serialize } from '../utils/loaders/SerializeDto';
+import { AddToCartReqDto, UserHeaderReqDto, getFinalCartResDto } from './dto';
 
 @ApiTags('Cart')
 @Auth(AuthType.UserBearer)
@@ -107,22 +102,5 @@ export class CartController {
   @Get('')
   async final(@Headers('user') user: UserHeaderReqDto) {
     return this.cartService.getCart(user);
-  }
-
-  @Serialize(checkCartResDto)
-  @ApiOkResponse({
-    description: 'When cart removed successfully',
-    status: 201,
-    type: checkCartResDto,
-  })
-  @ApiBadRequestResponse({
-    description: 'Not Found Exception',
-    status: 404,
-  })
-  @ApiBearerAuth()
-  @HttpCode(HttpStatus.OK)
-  @Get('checkout')
-  async checkout(@Headers('user') user: UserHeaderReqDto) {
-    return this.cartService.checkout(user);
   }
 }
