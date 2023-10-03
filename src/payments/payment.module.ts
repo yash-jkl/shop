@@ -8,6 +8,7 @@ import { LoggerModule } from '../utils/logger/logger.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CartEntity } from '../cart/entities';
 import { PaymentEntity } from './entities/payment.entities';
+import { PaymentRepository } from './repository/payment.repository';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { PaymentEntity } from './entities/payment.entities';
   providers: [
     PaymentService,
     CartRepository,
+    PaymentRepository,
     {
       provide: PaymentsService,
       useClass: StripeService,

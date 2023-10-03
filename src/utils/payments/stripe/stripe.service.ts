@@ -11,9 +11,9 @@ export class StripeService {
     });
   }
 
-  async createCheckOutSession(user, items: any[]): Promise<any> {
+  async createCheckOutSession(id: string, user, items: any[]): Promise<any> {
     const session = await this.stripe.checkout.sessions.create({
-      client_reference_id: '1234566',
+      client_reference_id: id,
       payment_method_types: ['card'],
       line_items: items,
       mode: 'payment',
@@ -25,14 +25,12 @@ export class StripeService {
   }
 
   async verifyPayment(data, signature): Promise<boolean> {
-    console.log('Stripe service');
     try {
       const event = this.stripe.webhooks.constructEvent(
         data,
         signature,
         env.payments.stripe.endPointSecrert,
       );
-      console.log('event');
       const eventData: any = event.data.object;
       console.log(eventData?.id as any);
       const sessionWithLineItems = await this.stripe.checkout.sessions.retrieve(

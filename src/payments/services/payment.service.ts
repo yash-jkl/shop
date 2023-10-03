@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { v4 as uuidv4 } from 'uuid';
 import { UserHeaderReqDto } from '../dto';
 import { LoggerService } from '../../utils/logger/winstonLogger';
 import { CartRepository } from '../../cart/repository/cart.repository';
@@ -8,12 +9,17 @@ import {
   NotFoundException,
   PaymentException,
 } from '../errors';
+import { PaymentCheckoutType, PaymentStatus } from '../constants';
+import { PaymentRepository } from '../repository/payment.repository';
 
 @Injectable()
 export class PaymentService {
   constructor(
     @Inject(CartRepository)
     private readonly cartRepository: CartRepository,
+
+    @Inject(PaymentRepository)
+    private readonly paymentRepository: PaymentRepository,
 
     private readonly paymentsService: PaymentsService,
     private readonly logger: LoggerService,
@@ -32,7 +38,18 @@ export class PaymentService {
         );
         throw new NotFoundException();
       }
-
+      const checkoutId = uuidv4();
+      const paymentCheckout: Array<PaymentCheckoutType> = carts.map((cart) => ({
+        checkoutId,
+        userId: user.id,
+        productId: cart.product.id,
+        productTitle: cart.product.title,
+        productPrice: cart.product.price,
+        adminId: cart.product?.admin.id,
+        quantity: cart.quantity,
+        status: PaymentStatus.PENDING,
+      }));
+      this.paymentRepository.addPaymentData(paymentCheckout);
       const items = carts.map((cart) => ({
         price_data: {
           currency: 'INR',
@@ -43,8 +60,8 @@ export class PaymentService {
         },
         quantity: cart.quantity,
       }));
-
       const { url } = await this.paymentsService.createCheckOutSession(
+        checkoutId,
         user,
         items,
       );

@@ -46,7 +46,7 @@ export class PaymentEntity extends BaseEntity {
   @Column({
     name: 'product_price',
   })
-  priceId: number;
+  productPrice: number;
 
   @Column({
     name: 'admin_id',
