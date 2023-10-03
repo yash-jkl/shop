@@ -21,7 +21,6 @@ import { UserHeaderReqDto, checkCartResDto } from './dto';
 import { Serialize } from '../utils/loaders/SerializeDto';
 
 @ApiTags('payment')
-// @Auth(AuthType.None)
 @Controller('payment')
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}

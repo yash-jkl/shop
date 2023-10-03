@@ -7,9 +7,13 @@ import { CartRepository } from '../cart/repository/cart.repository';
 import { LoggerModule } from '../utils/logger/logger.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CartEntity } from '../cart/entities';
+import { PaymentEntity } from './entities/payment.entities';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CartEntity]), LoggerModule],
+  imports: [
+    TypeOrmModule.forFeature([PaymentEntity, CartEntity]),
+    LoggerModule,
+  ],
   controllers: [PaymentController],
   providers: [
     PaymentService,

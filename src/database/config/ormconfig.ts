@@ -10,6 +10,6 @@ export default new DataSource({
   database: env.db.database,
   entities: [`${__dirname}/../../**/*.entities.{ts,js}`],
   migrations: [`${__dirname}/../migrations/*.{ts,js}`],
-  synchronize: true,
+  synchronize: false,
   dropSchema: false,
 });
