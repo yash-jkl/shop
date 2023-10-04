@@ -38,7 +38,13 @@ export class PaymentRepository implements IPaymentRepository {
       .update(PaymentEntity)
       .set({ status })
       .where('checkoutId = :checkoutId', { checkoutId })
-      .returning(['userId', 'productId', 'productPrice', 'quantity'])
+      .returning([
+        'userId',
+        'productId',
+        `productTitle`,
+        'productPrice',
+        'quantity',
+      ])
       .execute();
     return raw;
   }

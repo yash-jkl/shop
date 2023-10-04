@@ -9,6 +9,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CartEntity } from '../cart/entities';
 import { PaymentEntity } from './entities/payment.entities';
 import { PaymentRepository } from './repository/payment.repository';
+import { EmailService } from '../utils/email/email.service';
+import { EmailjsService } from '../utils/email/emailjs/emailjs.service';
 
 @Module({
   imports: [
@@ -23,6 +25,10 @@ import { PaymentRepository } from './repository/payment.repository';
     {
       provide: PaymentsService,
       useClass: StripeService,
+    },
+    {
+      provide: EmailService,
+      useClass: EmailjsService,
     },
   ],
 })

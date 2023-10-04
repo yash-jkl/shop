@@ -26,4 +26,17 @@ export class EmailjsService {
       return false;
     }
   }
+
+  async OrderSuccess(
+    email: string,
+    items: { product_title: string; product_price: number; quantity: number }[],
+    total: number,
+  ) {
+    const subject = `Payment Successful - Your Order is On its Way 🏎️`;
+    const message = JSON.stringify({
+      items,
+      total,
+    });
+    this.sendEmail(email, subject, message);
+  }
 }
