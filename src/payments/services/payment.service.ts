@@ -91,7 +91,13 @@ export class PaymentService {
     }
   }
 
-  async verify(event, signature) {
-    this.paymentsService.verifyPayment(event, signature);
+  async verify(event: Buffer, signature: any) {
+    const verified = this.paymentsService.verifyPayment(event, signature);
+    if (!verified.checkoutId) return;
+    const status = verified.status
+      ? PaymentStatus.SUCCESS
+      : PaymentStatus.FAILED;
+    this.paymentRepository.changePaymentStatus(verified.checkoutId, status);
+    return;
   }
 }

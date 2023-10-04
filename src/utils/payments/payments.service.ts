@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { verifyPayment } from '../constants';
 
 export interface IPayments {
   createCheckOutSession(id: string, user: any, items: any[]): Promise<any>;
-  verifyPayment(data, signature): Promise<boolean>;
+  verifyPayment(data: Buffer, signature: any): verifyPayment;
 }
 
 @Injectable()
@@ -12,5 +13,5 @@ export abstract class PaymentsService implements IPayments {
     user: any,
     items: any[],
   ): Promise<any>;
-  abstract verifyPayment(data, signature): Promise<boolean>;
+  abstract verifyPayment(data: Buffer, signature: any): verifyPayment;
 }
