@@ -101,15 +101,17 @@ export class PaymentService {
       verified.checkoutId,
       status,
     );
-    items.forEach(
-      (item: { user_id: string; product_id: string; quantity: number }) => {
-        this.cartRepository.removeItemFromCart(
-          item.user_id,
-          item.product_id,
-          item.quantity,
-        );
-      },
-    );
+    if(items.status){
+      items.forEach(
+        (item: { user_id: string; product_id: string; quantity: number }) => {
+          this.cartRepository.removeItemFromCart(
+            item.user_id,
+            item.product_id,
+            item.quantity,
+          );
+        },
+      );
+    }
     return;
   }
 }
