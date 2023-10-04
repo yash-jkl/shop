@@ -32,4 +32,6 @@ export const productExample: productExample = {
 export type verifyPayment = {
   status: boolean;
   checkoutId?: string;
+  amount?: number;
+  email?: string;
 };

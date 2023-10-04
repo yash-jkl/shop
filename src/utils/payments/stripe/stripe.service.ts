@@ -44,25 +44,31 @@ export class StripeService {
           return {
             status: false,
             checkoutId: checkoutSessionAsyncPaymentFailed?.client_reference_id,
+            email: checkoutSessionAsyncPaymentFailed?.customer_details.email,
           };
         case 'checkout.session.async_payment_succeeded':
           const checkoutSessionAsyncPaymentSucceeded: any = event.data.object;
           return {
             status: true,
             checkoutId:
-              checkoutSessionAsyncPaymentSucceeded?.client_reference_id,
+              checkoutSessionAsyncPaymentSucceeded.client_reference_id,
+            amount: checkoutSessionAsyncPaymentSucceeded.amount_total,
+            email: checkoutSessionAsyncPaymentSucceeded?.customer_details.email,
           };
         case 'checkout.session.completed':
           const checkoutSessionCompleted: any = event.data.object;
           return {
             status: true,
-            checkoutId: checkoutSessionCompleted?.client_reference_id,
+            checkoutId: checkoutSessionCompleted.client_reference_id,
+            amount: checkoutSessionCompleted.amount_total,
+            email: checkoutSessionCompleted?.customer_details.email,
           };
         case 'checkout.session.expired':
           const checkoutSessionExpired: any = event.data.object;
           return {
             status: false,
             checkoutId: checkoutSessionExpired?.client_reference_id,
+            email: checkoutSessionExpired?.customer_details.email,
           };
         // ... handle other event types
         default:
