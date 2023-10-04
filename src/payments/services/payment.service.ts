@@ -97,7 +97,19 @@ export class PaymentService {
     const status = verified.status
       ? PaymentStatus.SUCCESS
       : PaymentStatus.FAILED;
-    this.paymentRepository.changePaymentStatus(verified.checkoutId, status);
+    const items = await this.paymentRepository.changePaymentStatus(
+      verified.checkoutId,
+      status,
+    );
+    items.forEach(
+      (item: { user_id: string; product_id: string; quantity: number }) => {
+        this.cartRepository.removeItemFromCart(
+          item.user_id,
+          item.product_id,
+          item.quantity,
+        );
+      },
+    );
     return;
   }
 }

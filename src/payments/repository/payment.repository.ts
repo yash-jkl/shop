@@ -32,13 +32,14 @@ export class PaymentRepository implements IPaymentRepository {
   async changePaymentStatus(
     checkoutId: string,
     status: PaymentStatus,
-  ): Promise<void> {
-    await this.paymentEntity
-      .createQueryBuilder()
+  ): Promise<any> {
+    const { raw } = await this.paymentEntity
       .createQueryBuilder()
       .update(PaymentEntity)
       .set({ status })
       .where('checkoutId = :checkoutId', { checkoutId })
+      .returning(['userId', 'productId', 'productPrice', 'quantity'])
       .execute();
+    return raw;
   }
 }
