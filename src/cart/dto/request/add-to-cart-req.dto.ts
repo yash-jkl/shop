@@ -6,7 +6,7 @@ import {
   IsString,
   MaxLength,
 } from 'class-validator';
-import { IsNotBlank } from 'src/utils/decorators';
+import { IsNotBlank } from '../../../utils/decorators';
 
 export class AddToCartReqDto {
   @IsNotBlank()

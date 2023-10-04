@@ -7,8 +7,6 @@ import { NotFoundException } from '../errors';
 export interface ICartRepository {
   getCart(
     userId: string,
-    skip: number,
-    limit: number,
   ): Promise<{ cartItems: CartEntity[]; totalCount: number } | null>;
   addItem(userId: string, productId: string, quantity: number): Promise<void>;
   removeItemFromCart(
@@ -25,22 +23,6 @@ export class CartRepository implements ICartRepository {
     @InjectRepository(CartEntity)
     private readonly cartEntity: Repository<CartEntity>,
   ) {}
-
-  async getCart(
-    userId: string,
-    skip: number,
-    limit: number,
-  ): Promise<{ cartItems: CartEntity[]; totalCount: number } | null> {
-    const [cartItems, totalCount] = await this.cartEntity
-      .createQueryBuilder('cart')
-      .innerJoin('cart.user', 'user')
-      .innerJoinAndSelect('cart.product', 'product')
-      .where('user.id = :userId', { userId })
-      .skip(skip)
-      .take(limit)
-      .getManyAndCount();
-    return { cartItems, totalCount };
-  }
 
   async addItem(
     userId: string,
@@ -95,5 +77,27 @@ export class CartRepository implements ICartRepository {
       .where('cart.userId = :userId', { userId })
       .getMany();
     await this.cartEntity.remove(cartItems);
+  }
+
+  async getCart(
+    userId: string,
+  ): Promise<{ cartItems: CartEntity[]; totalCount: number } | null> {
+    const [cartItems, totalCount] = await this.cartEntity
+      .createQueryBuilder('cart')
+      .innerJoin('cart.user', 'user')
+      .innerJoinAndSelect('cart.product', 'product')
+      .where('user.id = :userId', { userId })
+      .getManyAndCount();
+    return { cartItems, totalCount };
+  }
+
+  async checkout(userId: string): Promise<CartEntity[] | null> {
+    const checkout = await this.cartEntity
+      .createQueryBuilder('cart')
+      .leftJoinAndSelect('cart.product', 'product')
+      .leftJoinAndSelect('product.admin', 'admin')
+      .where('cart.user.id = :userId', { userId })
+      .getMany();
+    return checkout;
   }
 }

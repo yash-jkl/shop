@@ -1,29 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { env } from '../../../env';
 import Stripe from 'stripe';
+import { LoggerService } from '../../logger/winstonLogger';
+import { verifyPayment } from '../../constants';
 
 @Injectable()
 export class StripeService {
   private stripe: Stripe;
-  constructor() {
+  constructor(private readonly logger: LoggerService) {
     this.stripe = new Stripe(env.payments.stripe.secretKey, {
       apiVersion: '2023-08-16',
     });
   }
+  static logInfo = 'Utils - Payment - Stripe';
 
-  async createCheckOutSession(user, items: any[]): Promise<any> {
+  async createCheckOutSession(id: string, user, items: any[]): Promise<any> {
     const session = await this.stripe.checkout.sessions.create({
+      client_reference_id: id,
       payment_method_types: ['card'],
       line_items: items,
       mode: 'payment',
-      success_url: 'http://localhost:3001/docs',
-      cancel_url: 'http://localhost:3001/docs',
+      success_url: 'http://localhost:3001/swagger',
+      cancel_url: 'http://localhost:3001/swagger',
       customer_email: user.email,
     });
     return session;
   }
 
-  async verifyPayment(data, signature): Promise<boolean> {
+  verifyPayment(
+    data: string | Buffer,
+    signature: string | Buffer | string[],
+  ): verifyPayment {
     try {
       const event = this.stripe.webhooks.constructEvent(
         data,
@@ -31,13 +38,42 @@ export class StripeService {
         env.payments.stripe.endPointSecrert,
       );
 
-      if (event.type === 'invoice.payment_succeeded') {
-        return true;
-      } else {
-        throw new Error();
+      switch (event.type) {
+        case 'checkout.session.async_payment_failed':
+          const checkoutSessionAsyncPaymentFailed: any = event.data.object;
+          return {
+            status: false,
+            checkoutId: checkoutSessionAsyncPaymentFailed?.client_reference_id,
+          };
+        case 'checkout.session.async_payment_succeeded':
+          const checkoutSessionAsyncPaymentSucceeded: any = event.data.object;
+          return {
+            status: true,
+            checkoutId:
+              checkoutSessionAsyncPaymentSucceeded?.client_reference_id,
+          };
+        case 'checkout.session.completed':
+          const checkoutSessionCompleted: any = event.data.object;
+          return {
+            status: true,
+            checkoutId: checkoutSessionCompleted?.client_reference_id,
+          };
+        case 'checkout.session.expired':
+          const checkoutSessionExpired: any = event.data.object;
+          return {
+            status: false,
+            checkoutId: checkoutSessionExpired?.client_reference_id,
+          };
+        // ... handle other event types
+        default:
+          this.logger.warn(
+            `${StripeService.logInfo} Unhandled event type ${event.type}`,
+          );
+          return { status: false };
       }
     } catch (error) {
-      return false;
+      this.logger.error(`${StripeService.logInfo} Signature Error `, error);
+      return { status: false };
     }
   }
 }

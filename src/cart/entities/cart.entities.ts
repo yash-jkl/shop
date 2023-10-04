@@ -1,4 +1,4 @@
-import { ProductEntity } from 'src/products/entities';
+import { ProductEntity } from '../../products/entities';
 import { UserEntity } from '../../users/entities';
 import {
   BaseEntity,

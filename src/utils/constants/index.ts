@@ -28,3 +28,8 @@ export const productExample: productExample = {
   price: 250,
   isAvailable: true,
 };
+
+export type verifyPayment = {
+  status: boolean;
+  checkoutId?: string;
+};

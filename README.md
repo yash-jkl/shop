@@ -71,3 +71,15 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+
+## Usefull commands
+```
+# Ngrok server start
+$ ngrok http 3001
+
+
+#Kill Ngrok
+$ taskkill /f /im ngrok.exe
+
+```

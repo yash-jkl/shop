@@ -7,7 +7,6 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Query,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -16,17 +15,11 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Auth } from 'src/utils/decorators/auth.decorator';
-import { AuthType } from 'src/utils/token/types';
+import { Auth } from '../utils/decorators/auth.decorator';
+import { AuthType } from '../utils/token/types';
 import { CartService } from './services/cart.service';
-import { Serialize } from 'src/utils/loaders/SerializeDto';
-import {
-  AddToCartReqDto,
-  CartGetAllLimitReqDto,
-  CartGetAllPageReqDto,
-  UserHeaderReqDto,
-  getCartResDto,
-} from './dto';
+import { Serialize } from '../utils/loaders/SerializeDto';
+import { AddToCartReqDto, UserHeaderReqDto, getFinalCartResDto } from './dto';
 
 @ApiTags('Cart')
 @Auth(AuthType.UserBearer)
@@ -54,27 +47,6 @@ export class CartController {
     @Body() body: AddToCartReqDto,
   ) {
     return this.cartService.addToCart(user, body);
-  }
-
-  @Serialize(getCartResDto)
-  @ApiOkResponse({
-    description: 'When Product added to cart successfully',
-    status: 200,
-    type: getCartResDto,
-  })
-  @ApiBadRequestResponse({
-    description: 'database error',
-    status: 500,
-  })
-  @ApiBearerAuth()
-  @HttpCode(HttpStatus.OK)
-  @Get('')
-  async getCart(
-    @Headers('user') user: UserHeaderReqDto,
-    @Query('page') page: CartGetAllPageReqDto,
-    @Query('limit') limit: CartGetAllLimitReqDto,
-  ) {
-    return this.cartService.getCart(user, page, limit);
   }
 
   @Serialize()
@@ -113,5 +85,22 @@ export class CartController {
   @Delete('')
   async deleteCart(@Headers('user') user: UserHeaderReqDto) {
     return this.cartService.deleteCart(user);
+  }
+
+  @Serialize(getFinalCartResDto)
+  @ApiOkResponse({
+    description: 'When cart removed successfully',
+    status: 201,
+    type: getFinalCartResDto,
+  })
+  @ApiBadRequestResponse({
+    description: 'Not Found Exception',
+    status: 404,
+  })
+  @ApiBearerAuth()
+  @HttpCode(HttpStatus.OK)
+  @Get('')
+  async final(@Headers('user') user: UserHeaderReqDto) {
+    return this.cartService.getCart(user);
   }
 }

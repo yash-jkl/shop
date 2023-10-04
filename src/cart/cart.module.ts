@@ -7,6 +7,9 @@ import { ProductEntity } from '../products/entities';
 import { UserEntity } from '../users/entities';
 import { LoggerModule } from '../utils/logger/logger.module';
 import { CartRepository } from './repository/cart.repository';
+import { Helper } from './helper/helper';
+import { PaymentsService } from '../utils/payments/payments.service';
+import { StripeService } from '../utils/payments/stripe/stripe.service';
 
 @Module({
   imports: [
@@ -14,6 +17,14 @@ import { CartRepository } from './repository/cart.repository';
     LoggerModule,
   ],
   controllers: [CartController],
-  providers: [CartService, CartRepository],
+  providers: [
+    CartService,
+    CartRepository,
+    Helper,
+    {
+      provide: PaymentsService,
+      useClass: StripeService,
+    },
+  ],
 })
 export class CartModule {}

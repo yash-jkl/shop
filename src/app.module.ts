@@ -6,6 +6,7 @@ import { AdminModule } from './admin/admin.module';
 import { ProductsModule } from './products/products.module';
 import { ShopModule } from './shop/shop.module';
 import { CartModule } from './cart/cart.module';
+import { PaymentsModule } from './payments/payment.module';
 
 @Module({
   imports: [
@@ -16,6 +17,8 @@ import { CartModule } from './cart/cart.module';
     ProductsModule,
     ShopModule,
     CartModule,
+    PaymentsModule,
+    PaymentsModule,
   ],
   controllers: [],
   providers: [],
