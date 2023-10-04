@@ -120,8 +120,8 @@ export class PaymentService {
       );
     }
     status
-      ? this.emailService.OrderSuccess(verified.email, items, verified.amount)
-      : null;
+      ? this.emailService.PaymentSuccess(verified.email, items, verified.amount)
+      : this.emailService.PaymentFailed(verified.email);
     return;
   }
 }

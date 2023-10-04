@@ -27,7 +27,7 @@ export class EmailjsService {
     }
   }
 
-  async OrderSuccess(
+  async PaymentSuccess(
     email: string,
     items: { product_title: string; product_price: number; quantity: number }[],
     total: number,
@@ -37,6 +37,12 @@ export class EmailjsService {
       items,
       total,
     });
+    this.sendEmail(email, subject, message);
+  }
+
+  async PaymentFailed(email) {
+    const subject = 'Payment Unsuccessfull - Unable to Place Order';
+    const message = `Due to some reason we where unable to recieve payment please try again`;
     this.sendEmail(email, subject, message);
   }
 }
