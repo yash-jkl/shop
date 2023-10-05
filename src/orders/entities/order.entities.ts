@@ -39,7 +39,7 @@ export class OrderEntity extends BaseEntity {
   product: ProductEntity;
 
   @Column()
-  productPrice: string;
+  productPrice: number;
 
   @Column({ default: 1, nullable: false })
   quantity: number;

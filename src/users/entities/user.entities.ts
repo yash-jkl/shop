@@ -1,5 +1,5 @@
-import { OrderEntity } from '../../orders/entities/order.entities';
-import { CartEntity } from '../../cart/entities/cart.entities';
+import { OrderEntity } from '../../orders/entities';
+import { CartEntity } from '../../cart/entities';
 import {
   BeforeInsert,
   Column,
