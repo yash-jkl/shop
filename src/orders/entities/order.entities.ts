@@ -38,7 +38,9 @@ export class OrderEntity extends BaseEntity {
   @JoinColumn()
   product: ProductEntity;
 
-  @Column()
+  @Column({
+    name: 'product_price',
+  })
   productPrice: number;
 
   @Column({ default: 1, nullable: false })
