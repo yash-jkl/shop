@@ -1,11 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
-import { IsUUID, IsString, IsNumber, IsBoolean } from 'class-validator';
+import { IsString } from 'class-validator';
 import { orderExample } from '../../../utils/constants';
 
 const example = [orderExample];
 export class Product {
-  
   @Expose()
   @IsString()
   title: string;
@@ -20,7 +19,7 @@ export class Order {
 
   @Expose()
   createdAt: number;
-  
+
   @Expose()
   @ApiProperty({ type: Product })
   @Type(() => Product)
@@ -34,5 +33,5 @@ export class ShopAllResDto {
   orders: Array<Order>;
 
   @Expose()
-  total:number
+  total: number;
 }

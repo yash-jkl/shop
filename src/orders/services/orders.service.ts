@@ -3,12 +3,15 @@ import { CartRepository } from '../../cart/repository/cart.repository';
 import { PaymentRepository } from '../../payments/repository/payment.repository';
 import { EmailService } from '../../utils/email/email.service';
 import { OrderRepository } from '../repository/order.repository';
-import { SortOrder, verifyPayment } from '../../utils/constants';
+import { verifyPayment } from '../../utils/constants';
 import { PaymentStatus } from '../../payments/constants';
 import { LoggerService } from '../../utils/logger/winstonLogger';
-import { OrderGetAllFieldReqDto, OrderGetAllSortOrderReqDto, UserHeaderReqDto } from '../dto';
+import {
+  OrderGetAllFieldReqDto,
+  OrderGetAllSortOrderReqDto,
+  UserHeaderReqDto,
+} from '../dto';
 import { NotFoundException } from '../errors';
-import { SortField } from '../constants';
 
 @Injectable()
 export class OrdersService {
@@ -88,7 +91,7 @@ export class OrdersService {
     page: number = 1,
     limit: number = 10,
     sortOrder: OrderGetAllSortOrderReqDto,
-    sortField: OrderGetAllFieldReqDto ,
+    sortField: OrderGetAllFieldReqDto,
   ) {
     this.logger.info(
       `${OrdersService.logInfo} Getting Orders for user with id ${user.id}`,
