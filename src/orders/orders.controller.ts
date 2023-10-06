@@ -1,12 +1,31 @@
-import { Controller, Query, Headers, Get, HttpStatus, HttpCode } from '@nestjs/common';
+import {
+  Controller,
+  Query,
+  Headers,
+  Get,
+  HttpStatus,
+  HttpCode,
+} from '@nestjs/common';
 import { OrdersService } from './services/orders.service';
-import { OrderGetAllFieldReqDto, OrderGetAllLimitReqDto, OrderGetAllPageReqDto, OrderGetAllSortOrderReqDto, ShopAllResDto, UserHeaderReqDto } from './dto';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiOkResponse, ApiResponse } from '@nestjs/swagger';
+import {
+  OrderGetAllFieldReqDto,
+  OrderGetAllLimitReqDto,
+  OrderGetAllPageReqDto,
+  OrderGetAllSortOrderReqDto,
+  ShopAllResDto,
+  UserHeaderReqDto,
+} from './dto';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiOkResponse,
+  ApiResponse,
+} from '@nestjs/swagger';
 import { Serialize } from '../utils/loaders/SerializeDto';
 
 @Controller('orders')
 export class OrdersController {
-    constructor(private readonly ordersService: OrdersService) {}
+  constructor(private readonly ordersService: OrdersService) {}
 
   @Serialize(ShopAllResDto)
   @ApiResponse({
@@ -31,6 +50,12 @@ export class OrdersController {
     @Query('sortOrder') sortOrder: OrderGetAllSortOrderReqDto,
     @Query('sortField') sortField: OrderGetAllFieldReqDto,
   ) {
-    return this.ordersService.getOrders(user,+page,+limit,sortOrder,sortField);
+    return this.ordersService.getOrders(
+      user,
+      +page,
+      +limit,
+      sortOrder,
+      sortField,
+    );
   }
 }

@@ -2,10 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { OrderEntity } from '../entities';
 import { Repository } from 'typeorm/repository/Repository';
-import { SortOrder } from '../../utils/constants';
-import { SortField } from '../constants';
 import { OrderGetAllSortOrderReqDto, OrderGetAllFieldReqDto } from '../dto';
-import { getRepository } from 'typeorm';
 
 export interface IOrderRepository {
   save(ordersData): Promise<void>;
@@ -37,8 +34,9 @@ export class OrderRepository implements IOrderRepository {
     sortOrderDto: OrderGetAllSortOrderReqDto,
     sortField: OrderGetAllFieldReqDto,
   ): Promise<[OrderEntity[], number] | undefined> {
-    const sortOrder:any = sortOrderDto
-    const [data, count] = await this.orderEntity.createQueryBuilder('order')
+    const sortOrder: any = sortOrderDto;
+    const [data, count] = await this.orderEntity
+      .createQueryBuilder('order')
       .leftJoinAndSelect('order.product', 'product')
       .leftJoin('order.user', 'user')
       .where('user.id = :userId', { userId })

@@ -1,9 +1,18 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Init1696337319586 implements MigrationInterface {
-  name = 'Init1696337319586';
+export class Init1696575679461 implements MigrationInterface {
+  name = 'Init1696575679461';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(
+      `CREATE TABLE "order" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "payment_id" uuid NOT NULL, "product_price" integer NOT NULL, "quantity" integer NOT NULL DEFAULT '1', "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "userId" uuid, "productId" uuid, CONSTRAINT "PK_1031171c13130102495201e3e20" PRIMARY KEY ("id"))`,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_caabe91507b3379c7ba73637b8" ON "order" ("userId") `,
+    );
+    await queryRunner.query(
+      `CREATE INDEX "IDX_88991860e839c6153a7ec878d3" ON "order" ("productId") `,
+    );
     await queryRunner.query(
       `CREATE TABLE "users" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "first_name" character varying NOT NULL, "last_name" character varying NOT NULL, "email" character varying NOT NULL, "password" character varying NOT NULL, "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, CONSTRAINT "UQ_97672ac88f789774dd47f7c8be3" UNIQUE ("email"), CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id"))`,
     );
@@ -41,6 +50,12 @@ export class Init1696337319586 implements MigrationInterface {
       `CREATE TABLE "payment" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "checkout_id" uuid NOT NULL, "user_id" uuid NOT NULL, "product_id" uuid NOT NULL, "product_title" character varying NOT NULL, "product_price" integer NOT NULL, "admin_id" uuid NOT NULL, "quantity" integer NOT NULL DEFAULT '1', "status" "public"."payment_status_enum" NOT NULL DEFAULT 'pending', "created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, CONSTRAINT "UQ_125c5afaa7216a2bf2b2127fdf4" UNIQUE ("checkout_id", "product_id"), CONSTRAINT "PK_fcaec7df5adf9cac408c686b2ab" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
+      `ALTER TABLE "order" ADD CONSTRAINT "FK_caabe91507b3379c7ba73637b84" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "order" ADD CONSTRAINT "FK_88991860e839c6153a7ec878d39" FOREIGN KEY ("productId") REFERENCES "product"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
+    );
+    await queryRunner.query(
       `ALTER TABLE "cart" ADD CONSTRAINT "FK_756f53ab9466eb52a52619ee019" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
@@ -60,6 +75,12 @@ export class Init1696337319586 implements MigrationInterface {
     );
     await queryRunner.query(
       `ALTER TABLE "cart" DROP CONSTRAINT "FK_756f53ab9466eb52a52619ee019"`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "order" DROP CONSTRAINT "FK_88991860e839c6153a7ec878d39"`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "order" DROP CONSTRAINT "FK_caabe91507b3379c7ba73637b84"`,
     );
     await queryRunner.query(`DROP TABLE "payment"`);
     await queryRunner.query(
@@ -87,5 +108,12 @@ export class Init1696337319586 implements MigrationInterface {
       `DROP INDEX "public"."IDX_97672ac88f789774dd47f7c8be"`,
     );
     await queryRunner.query(`DROP TABLE "users"`);
+    await queryRunner.query(
+      `DROP INDEX "public"."IDX_88991860e839c6153a7ec878d3"`,
+    );
+    await queryRunner.query(
+      `DROP INDEX "public"."IDX_caabe91507b3379c7ba73637b8"`,
+    );
+    await queryRunner.query(`DROP TABLE "order"`);
   }
 }
