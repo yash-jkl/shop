@@ -71,10 +71,10 @@ export class OrdersService {
     }
     this.logger.info(
       `${OrdersService.logInfo} Sending ${
-        status ? 'success' : 'failed'
+        verified.status ? 'success' : 'failed'
       } Email to users with id ${items[0].user_id}`,
     );
-    status
+    verified.status
       ? await this.emailService.PaymentSuccess(
           verified.email,
           items,
