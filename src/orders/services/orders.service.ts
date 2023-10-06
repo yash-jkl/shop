@@ -3,9 +3,12 @@ import { CartRepository } from '../../cart/repository/cart.repository';
 import { PaymentRepository } from '../../payments/repository/payment.repository';
 import { EmailService } from '../../utils/email/email.service';
 import { OrderRepository } from '../repository/order.repository';
-import { verifyPayment } from '../../utils/constants';
+import { SortOrder, verifyPayment } from '../../utils/constants';
 import { PaymentStatus } from '../../payments/constants';
 import { LoggerService } from '../../utils/logger/winstonLogger';
+import { OrderGetAllFieldReqDto, OrderGetAllSortOrderReqDto, UserHeaderReqDto } from '../dto';
+import { NotFoundException } from '../errors';
+import { SortField } from '../constants';
 
 @Injectable()
 export class OrdersService {
@@ -78,5 +81,38 @@ export class OrdersService {
     this.logger.info(
       `${OrdersService.logInfo} Sent Email to users with id ${items[0].user_id}`,
     );
+  }
+
+  async getOrders(
+    user: UserHeaderReqDto,
+    page: number = 1,
+    limit: number = 10,
+    sortOrder: OrderGetAllSortOrderReqDto,
+    sortField: OrderGetAllFieldReqDto ,
+  ) {
+    this.logger.info(
+      `${OrdersService.logInfo} Getting Orders for user with id ${user.id}`,
+    );
+    const skip = (page - 1) * limit;
+    const [orders, total] = await this.orderRepository.getByUserId(
+      user.id,
+      skip,
+      limit,
+      sortOrder,
+      sortField,
+    );
+    if (!orders) {
+      this.logger.warn(
+        `${OrdersService.logInfo} Orders not found for user with id ${user.id}`,
+      );
+      throw new NotFoundException();
+    }
+    this.logger.info(
+      `${OrdersService.logInfo} Got Orders for user with id ${user.id}`,
+    );
+    return {
+      orders,
+      total,
+    };
   }
 }
