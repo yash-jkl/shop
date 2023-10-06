@@ -11,7 +11,7 @@ import {
 } from '../errors';
 import { PaymentCheckoutType, PaymentStatus } from '../constants';
 import { PaymentRepository } from '../repository/payment.repository';
-import { EmailService } from '../../utils/email/email.service';
+import { OrdersService } from 'src/orders/services/orders.service';
 
 @Injectable()
 export class PaymentService {
@@ -24,8 +24,9 @@ export class PaymentService {
 
     private readonly paymentsService: PaymentsService,
 
-    private readonly emailService: EmailService,
     private readonly logger: LoggerService,
+
+    private readonly ordersService: OrdersService,
   ) {}
   static logInfo = 'Service - Payment';
 
@@ -100,28 +101,7 @@ export class PaymentService {
     const status = verified.status
       ? PaymentStatus.SUCCESS
       : PaymentStatus.FAILED;
-    const items = await this.paymentRepository.changePaymentStatus(
-      verified.checkoutId,
-      status,
-    );
-    if (verified.status) {
-      items.forEach(
-        async (item: {
-          user_id: string;
-          product_id: string;
-          quantity: number;
-        }) => {
-          await this.cartRepository.removeItemFromCart(
-            item.user_id,
-            item.product_id,
-            item.quantity,
-          );
-        },
-      );
-    }
-    status
-      ? this.emailService.PaymentSuccess(verified.email, items, verified.amount)
-      : this.emailService.PaymentFailed(verified.email);
+    this.ordersService.createOrder(verified, status);
     return;
   }
 }

@@ -15,6 +15,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
+import { OrderEntity } from '../../orders/entities/order.entities';
 
 @Entity({
   name: 'product',
@@ -74,6 +75,11 @@ export class ProductEntity extends BaseEntity {
     nullable: true,
   })
   cart: CartEntity[];
+
+  @OneToMany(() => OrderEntity, (order) => order.product, {
+    nullable: true,
+  })
+  order: OrderEntity[];
 
   @BeforeInsert()
   generateId() {

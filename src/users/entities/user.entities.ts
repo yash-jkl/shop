@@ -1,4 +1,5 @@
-import { CartEntity } from '../../cart/entities/cart.entities';
+import { OrderEntity } from '../../orders/entities';
+import { CartEntity } from '../../cart/entities';
 import {
   BeforeInsert,
   Column,
@@ -62,6 +63,11 @@ export class UserEntity {
     nullable: true,
   })
   cart: CartEntity[];
+
+  @OneToMany(() => OrderEntity, (order) => order.user, {
+    nullable: true,
+  })
+  order: OrderEntity[];
 
   @BeforeInsert()
   generateId() {
