@@ -11,9 +11,15 @@ import { mockPaymentRepository } from '../../..//payments/tests/mocks';
 import {
   createOrderInputFailure,
   createOrderInputSuccess,
+  getOrderrepository,
   paymentMock,
+  sortField,
+  sortOrder,
+  total,
+  userHeaderInput,
 } from '../constants';
 import { PaymentStatus } from '../../../payments/constants';
+import { NotFoundException } from '../../errors';
 
 describe('Order Service', () => {
   let ordersService: OrdersService;
@@ -73,9 +79,6 @@ describe('Order Service', () => {
 
     it('Faliure should send faliure Email', async () => {
       paymentRepository.changePaymentStatus.mockReturnValue([paymentMock]);
-      // cartRepository.removeItemFromCart.mockReturnValue();
-      // orderRepository.save.mockReturnValue();
-
       await ordersService.createOrder(
         createOrderInputFailure,
         PaymentStatus.FAILED,
@@ -83,6 +86,39 @@ describe('Order Service', () => {
 
       expect(emailService.PaymentFailed).toBeCalled();
       expect(emailService.PaymentSuccess).not.toBeCalled();
+    });
+  });
+
+  describe('Get Order', () => {
+    it('Should return  valid object for valid data', async () => {
+      orderRepository.getByUserId.mockReturnValue([getOrderrepository, total]);
+      const orders = await ordersService.getOrders(
+        userHeaderInput,
+        1,
+        1,
+        sortOrder,
+        sortField,
+      );
+
+      expect(orders).toEqual({
+        orders: getOrderrepository,
+        total,
+      });
+    });
+
+    it('Should return  notFound exception for no orders', async () => {
+      orderRepository.getByUserId.mockReturnValue([{}, 0]);
+      try {
+        await ordersService.getOrders(
+          userHeaderInput,
+          1,
+          1,
+          sortOrder,
+          sortField,
+        );
+      } catch (error) {
+        expect(error).toBeInstanceOf(NotFoundException);
+      }
     });
   });
 });

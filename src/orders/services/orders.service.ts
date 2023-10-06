@@ -104,7 +104,7 @@ export class OrdersService {
       sortOrder,
       sortField,
     );
-    if (!orders) {
+    if (!total) {
       this.logger.warn(
         `${OrdersService.logInfo} Orders not found for user with id ${user.id}`,
       );

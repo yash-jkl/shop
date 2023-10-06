@@ -11,7 +11,7 @@ import {
 } from '../errors';
 import { PaymentCheckoutType, PaymentStatus } from '../constants';
 import { PaymentRepository } from '../repository/payment.repository';
-import { OrdersService } from 'src/orders/services/orders.service';
+import { OrdersService } from '../../orders/services/orders.service';
 
 @Injectable()
 export class PaymentService {

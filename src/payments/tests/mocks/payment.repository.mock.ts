@@ -1,4 +1,4 @@
-import { IPaymentRepository } from 'src/payments/repository/payment.repository';
+import { IPaymentRepository } from '../../../payments/repository/payment.repository';
 
 export const mockPaymentRepository = (): IPaymentRepository => ({
   addPaymentData: jest.fn(),
