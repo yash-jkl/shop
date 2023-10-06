@@ -13,8 +13,19 @@ import {
 } from '../dto';
 import { NotFoundException } from '../errors';
 
+export interface IOrderService {
+  createOrder(verified: verifyPayment, status: PaymentStatus);
+  getOrders(
+    user: UserHeaderReqDto,
+    page: number,
+    limit: number,
+    sortOrder: OrderGetAllSortOrderReqDto,
+    sortField: OrderGetAllFieldReqDto,
+  );
+}
+
 @Injectable()
-export class OrdersService {
+export class OrdersService implements IOrderService {
   constructor(
     @Inject(CartRepository)
     private readonly cartRepository: CartRepository,
