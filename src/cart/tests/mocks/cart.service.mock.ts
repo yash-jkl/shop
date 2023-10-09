@@ -1,6 +1,6 @@
 import { ICartService } from '../../services/cart.service';
 
-export const mockCartRepository = (): ICartService => ({
+export const mockCartService = (): ICartService => ({
   addToCart: jest.fn(),
   removeItemFromCart: jest.fn(),
   deleteCart: jest.fn(),
