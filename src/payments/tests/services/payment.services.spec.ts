@@ -10,6 +10,9 @@ import { mockCartRepository } from '../../../cart/tests/mocks';
 import { mockOrderService } from '../../../orders/tests/mocks/order.service.mock';
 import { PaymentService } from '../../services/payment.service';
 import { PaymentsService } from '../../../utils/payments/payments.service';
+import { PaymentStatus } from '../../constants';
+import { NotFoundException } from '../../errors';
+import { mockCheckoutOutput, mockurl, url, userHeaderInput } from '../constants';
 
 describe('Order Service', () => {
   let orderRepository;
@@ -17,7 +20,7 @@ describe('Order Service', () => {
   let cartRepository;
   let paymentService: PaymentService;
   let ordersService;
-  let paymentsService: PaymentsService;
+  let paymentsService;
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -57,10 +60,44 @@ describe('Order Service', () => {
     expect(PaymentService).toBeDefined();
   });
 
-  // describe('Create Order', () => {
+  describe('checkout', () => {
+    it('should throw not found expection when cart is empty', async () => {
+      cartRepository.checkout.mockRejectedValue([]);
+      try {
+        await paymentService.checkout(userHeaderInput);
+      } catch (error) {
+        expect(error).toBeInstanceOf(NotFoundException);
+      }
+    });
+  });
 
-  // });
+  describe('verify', () => {
+    it('should create an order with PaymentStatus.SUCCESS when payment is verified successfully', async () => {
+      const eventBuffer = Buffer.from('event data');
+      const signature = 'signature';
+      paymentsService.verifyPayment.mockReturnValue({
+        checkoutId: '123',
+        status: true,
+      });
+      await paymentService.verify(eventBuffer, signature);
+      expect(ordersService.createOrder).toHaveBeenCalledWith(
+        { checkoutId: '123', status: true },
+        PaymentStatus.SUCCESS,
+      );
+    });
 
-  // describe('Get Order', () => {
-  // });
+    it('should not create an order when payment verification fails', async () => {
+      const eventBuffer = Buffer.from('event data');
+      const signature = 'signature';
+      paymentsService.verifyPayment.mockReturnValue({
+        checkoutId: '123',
+        status: false,
+      });
+      await paymentService.verify(eventBuffer, signature);
+      expect(ordersService.createOrder).toHaveBeenCalledWith(
+        { checkoutId: '123', status: false },
+        PaymentStatus.FAILED,
+      );
+    });
+  });
 });

@@ -5,7 +5,6 @@ import { LoggerService } from '../../utils/logger/winstonLogger';
 import { CartRepository } from '../../cart/repository/cart.repository';
 import { PaymentsService } from '../../utils/payments/payments.service';
 import {
-  DatabaseConnectionException,
   NotFoundException,
   PaymentException,
 } from '../errors';
@@ -27,7 +26,7 @@ export class PaymentService {
     private readonly logger: LoggerService,
 
     private readonly ordersService: OrdersService,
-  ) {}
+  ) { }
   static logInfo = 'Service - Payment';
 
   async checkout(user: UserHeaderReqDto) {
@@ -36,10 +35,7 @@ export class PaymentService {
         `${PaymentService.logInfo} get checkout user id: ${user.id}`,
       );
       const carts = await this.cartRepository.checkout(user.id);
-      if (!carts) {
-        this.logger.warn(
-          `${PaymentService.logInfo} Checkout failed - NotFoundException`,
-        );
+      if (!carts.length) {
         throw new NotFoundException();
       }
       const checkoutId = uuidv4();
@@ -69,17 +65,16 @@ export class PaymentService {
         user,
         items,
       );
-
       this.logger.info(
         `${PaymentService.logInfo} Checkout successful for user id: ${user.id}`,
       );
       return url;
     } catch (error) {
-      if (error instanceof DatabaseConnectionException) {
+      if (error instanceof NotFoundException) {
         this.logger.warn(
-          `${PaymentService.logInfo} Checkout failed - DatabaseConnectionException`,
+          `${PaymentService.logInfo} Checkout failed - NotFoundException`,
         );
-        throw new DatabaseConnectionException();
+        throw new NotFoundException();
       } else if (error instanceof PaymentException) {
         this.logger.warn(
           `${PaymentService.logInfo} Checkout failed - PaymentException`,

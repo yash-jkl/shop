@@ -5,4 +5,5 @@ export const mockCartRepository = (): ICartRepository => ({
   deleteCartItems: jest.fn(),
   getCart: jest.fn(),
   removeItemFromCart: jest.fn(),
+  checkout: jest.fn(),
 });

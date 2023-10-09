@@ -15,6 +15,7 @@ export interface ICartRepository {
     quantity: number,
   ): Promise<void>;
   deleteCartItems(userId: string): Promise<void>;
+  checkout(userId: string): Promise<CartEntity[] | null>;
 }
 
 @Injectable()
