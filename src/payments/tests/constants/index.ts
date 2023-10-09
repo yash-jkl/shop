@@ -24,3 +24,10 @@ export const url = 'http://google.com';
 export const mockurl = {
   url,
 };
+
+export const userHeaderInvalidInput = {
+  id: '929270f8-f62e-4580-8533-10d473ce520a',
+  email: 'john@doe.com',
+  iat: 1234,
+  exp: 1234,
+};
