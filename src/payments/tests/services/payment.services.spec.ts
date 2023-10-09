@@ -105,5 +105,16 @@ describe('Order Service', () => {
         PaymentStatus.FAILED,
       );
     });
+    it('should not create an order when checkout id null', async () => {
+      const eventBuffer = Buffer.from('event data');
+      const signature = 'signature';
+      paymentsService.verifyPayment.mockReturnValue({
+        checkoutId: '',
+        status: false,
+      });
+      const data = await paymentService.verify(eventBuffer, signature);
+      expect(data).toEqual(undefined);
+      expect(ordersService.createOrder).not.toHaveBeenCalled();
+    });
   });
 });
