@@ -49,6 +49,7 @@ export const orderExample: OrderExample = {
   id: '7f212c67-13d9-441e-8346-d8fb9851f49a',
   paymentId: '4caee7df-c991-40c1-933b-d963527d1a28',
   product: {
+    id: '7f212c67-13d9-441e-8346-d8fb9851f49a',
     title: 'Book',
   },
   productPrice: 250,

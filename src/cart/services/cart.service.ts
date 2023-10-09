@@ -5,7 +5,12 @@ import { CartRepository } from '../repository/cart.repository';
 import { LoggerService } from '../../utils/logger/winstonLogger';
 import { DatabaseConnectionException, NotFoundException } from '../errors';
 
-export interface ICartService {}
+export interface ICartService {
+  addToCart(user: UserHeaderReqDto, data: AddToCartReqDto);
+  removeItemFromCart(user: UserHeaderReqDto, data: AddToCartReqDto);
+  deleteCart(user: UserHeaderReqDto);
+  getCart(user: UserHeaderReqDto);
+}
 
 @Injectable()
 export class CartService implements ICartService {
