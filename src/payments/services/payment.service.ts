@@ -4,14 +4,10 @@ import { UserHeaderReqDto } from '../dto';
 import { LoggerService } from '../../utils/logger/winstonLogger';
 import { CartRepository } from '../../cart/repository/cart.repository';
 import { PaymentsService } from '../../utils/payments/payments.service';
-import {
-  DatabaseConnectionException,
-  NotFoundException,
-  PaymentException,
-} from '../errors';
+import { NotFoundException } from '../errors';
 import { PaymentCheckoutType, PaymentStatus } from '../constants';
 import { PaymentRepository } from '../repository/payment.repository';
-import { OrdersService } from 'src/orders/services/orders.service';
+import { OrdersService } from '../../orders/services/orders.service';
 
 @Injectable()
 export class PaymentService {
@@ -36,10 +32,7 @@ export class PaymentService {
         `${PaymentService.logInfo} get checkout user id: ${user.id}`,
       );
       const carts = await this.cartRepository.checkout(user.id);
-      if (!carts) {
-        this.logger.warn(
-          `${PaymentService.logInfo} Checkout failed - NotFoundException`,
-        );
+      if (!carts.length) {
         throw new NotFoundException();
       }
       const checkoutId = uuidv4();
@@ -69,29 +62,15 @@ export class PaymentService {
         user,
         items,
       );
-
       this.logger.info(
         `${PaymentService.logInfo} Checkout successful for user id: ${user.id}`,
       );
       return url;
     } catch (error) {
-      if (error instanceof DatabaseConnectionException) {
-        this.logger.warn(
-          `${PaymentService.logInfo} Checkout failed - DatabaseConnectionException`,
-        );
-        throw new DatabaseConnectionException();
-      } else if (error instanceof PaymentException) {
-        this.logger.warn(
-          `${PaymentService.logInfo} Checkout failed - PaymentException`,
-        );
-        throw new PaymentException();
-      } else {
-        this.logger.error(
-          `${PaymentService.logInfo} Unexpected error during checkout`,
-          error,
-        );
-        throw error;
-      }
+      this.logger.warn(
+        `${PaymentService.logInfo} Checkout failed - NotFoundException`,
+      );
+      throw new NotFoundException();
     }
   }
 

@@ -13,8 +13,19 @@ import {
 } from '../dto';
 import { NotFoundException } from '../errors';
 
+export interface IOrderService {
+  createOrder(verified: verifyPayment, status: PaymentStatus);
+  getOrders(
+    user: UserHeaderReqDto,
+    page: number,
+    limit: number,
+    sortOrder: OrderGetAllSortOrderReqDto,
+    sortField: OrderGetAllFieldReqDto,
+  );
+}
+
 @Injectable()
-export class OrdersService {
+export class OrdersService implements IOrderService {
   constructor(
     @Inject(CartRepository)
     private readonly cartRepository: CartRepository,
@@ -71,10 +82,10 @@ export class OrdersService {
     }
     this.logger.info(
       `${OrdersService.logInfo} Sending ${
-        status ? 'success' : 'failed'
+        verified.status ? 'success' : 'failed'
       } Email to users with id ${items[0].user_id}`,
     );
-    status
+    verified.status
       ? await this.emailService.PaymentSuccess(
           verified.email,
           items,
@@ -104,7 +115,7 @@ export class OrdersService {
       sortOrder,
       sortField,
     );
-    if (!orders) {
+    if (!total) {
       this.logger.warn(
         `${OrdersService.logInfo} Orders not found for user with id ${user.id}`,
       );

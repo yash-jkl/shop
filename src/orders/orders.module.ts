@@ -14,8 +14,8 @@ import { EmailService } from '../utils/email/email.service';
 import { EmailjsService } from '../utils/email/emailjs/emailjs.service';
 import { PaymentsService } from '../utils/payments/payments.service';
 import { StripeService } from '../utils/payments/stripe/stripe.service';
-import { CartEntity } from 'src/cart/entities';
-import { PaymentEntity } from 'src/payments/entities';
+import { CartEntity } from '../cart/entities';
+import { PaymentEntity } from '../payments/entities';
 
 @Module({
   imports: [
