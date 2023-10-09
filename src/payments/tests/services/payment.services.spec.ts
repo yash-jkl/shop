@@ -1,7 +1,5 @@
 import { TestingModule, Test } from '@nestjs/testing';
-import { OrderRepository } from '../../../orders/repository/order.repository';
 import { OrdersService } from '../../../orders/services/orders.service';
-import { mockOrderRepository } from '../../../orders/tests/mocks';
 import { PaymentRepository } from '../../repository/payment.repository';
 import { LoggerService } from '../../../utils/logger/winstonLogger';
 import { mockPaymentRepository, mockPaymentsService } from '../mocks';
@@ -12,10 +10,14 @@ import { PaymentService } from '../../services/payment.service';
 import { PaymentsService } from '../../../utils/payments/payments.service';
 import { PaymentStatus } from '../../constants';
 import { NotFoundException } from '../../errors';
-import { mockCheckoutOutput, mockurl, url, userHeaderInput } from '../constants';
+import {
+  mockCheckoutOutput,
+  mockurl,
+  url,
+  userHeaderInput,
+} from '../constants';
 
 describe('Order Service', () => {
-  let orderRepository;
   let paymentRepository;
   let cartRepository;
   let paymentService: PaymentService;
@@ -26,10 +28,6 @@ describe('Order Service', () => {
       providers: [
         LoggerService,
         PaymentService,
-        {
-          provide: OrderRepository,
-          useFactory: mockOrderRepository,
-        },
         {
           provide: PaymentRepository,
           useFactory: mockPaymentRepository,
@@ -48,7 +46,6 @@ describe('Order Service', () => {
         },
       ],
     }).compile();
-    orderRepository = module.get<OrderRepository>(OrderRepository);
     paymentRepository = module.get<PaymentRepository>(PaymentRepository);
     cartRepository = module.get<CartRepository>(CartRepository);
     paymentService = module.get<PaymentService>(PaymentService);
@@ -61,22 +58,23 @@ describe('Order Service', () => {
   });
 
   describe('checkout', () => {
+    it('Valid data should return a url', async () => {
+      cartRepository.checkout.mockReturnValue([mockCheckoutOutput]);
+      paymentRepository.addPaymentData.mockReturnValue();
+      paymentsService.createCheckOutSession.mockReturnValue(mockurl);
+
+      const data = await paymentService.checkout(userHeaderInput);
+      expect(data).toEqual(url);
+    });
+
     it('should throw not found expection when cart is empty', async () => {
-      cartRepository.checkout.mockRejectedValue([]);
+      cartRepository.checkout.mockReturnValue([]);
       try {
         await paymentService.checkout(userHeaderInput);
       } catch (error) {
         expect(error).toBeInstanceOf(NotFoundException);
       }
     });
-    it('Valid data should return a url', async()=>{
-      cartRepository.checkout.mockReturnValue([mockCheckoutOutput])
-      paymentRepository.addPaymentData.mockReturnValue()
-      paymentsService.createCheckOutSession.mockReturnValue(mockurl)
-
-      const data = await paymentService.checkout(userHeaderInput)
-      expect(data).toEqual(url)
-    })
   });
 
   describe('verify', () => {

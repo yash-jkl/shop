@@ -4,10 +4,7 @@ import { UserHeaderReqDto } from '../dto';
 import { LoggerService } from '../../utils/logger/winstonLogger';
 import { CartRepository } from '../../cart/repository/cart.repository';
 import { PaymentsService } from '../../utils/payments/payments.service';
-import {
-  NotFoundException,
-  PaymentException,
-} from '../errors';
+import { NotFoundException } from '../errors';
 import { PaymentCheckoutType, PaymentStatus } from '../constants';
 import { PaymentRepository } from '../repository/payment.repository';
 import { OrdersService } from '../../orders/services/orders.service';
@@ -26,7 +23,7 @@ export class PaymentService {
     private readonly logger: LoggerService,
 
     private readonly ordersService: OrdersService,
-  ) { }
+  ) {}
   static logInfo = 'Service - Payment';
 
   async checkout(user: UserHeaderReqDto) {
@@ -70,23 +67,10 @@ export class PaymentService {
       );
       return url;
     } catch (error) {
-      if (error instanceof NotFoundException) {
-        this.logger.warn(
-          `${PaymentService.logInfo} Checkout failed - NotFoundException`,
-        );
-        throw new NotFoundException();
-      } else if (error instanceof PaymentException) {
-        this.logger.warn(
-          `${PaymentService.logInfo} Checkout failed - PaymentException`,
-        );
-        throw new PaymentException();
-      } else {
-        this.logger.error(
-          `${PaymentService.logInfo} Unexpected error during checkout`,
-          error,
-        );
-        throw error;
-      }
+      this.logger.warn(
+        `${PaymentService.logInfo} Checkout failed - NotFoundException`,
+      );
+      throw new NotFoundException();
     }
   }
 
