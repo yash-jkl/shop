@@ -20,9 +20,11 @@ import {
   ApiBearerAuth,
   ApiOkResponse,
   ApiResponse,
+  ApiTags,
 } from '@nestjs/swagger';
 import { Serialize } from '../utils/loaders/SerializeDto';
 
+@ApiTags('Orders')
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
