@@ -69,6 +69,14 @@ describe('Order Service', () => {
         expect(error).toBeInstanceOf(NotFoundException);
       }
     });
+    it('Valid data should return a url', async()=>{
+      cartRepository.checkout.mockReturnValue([mockCheckoutOutput])
+      paymentRepository.addPaymentData.mockReturnValue()
+      paymentsService.createCheckOutSession.mockReturnValue(mockurl)
+
+      const data = await paymentService.checkout(userHeaderInput)
+      expect(data).toEqual(url)
+    })
   });
 
   describe('verify', () => {
