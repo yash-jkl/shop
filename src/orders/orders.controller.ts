@@ -12,7 +12,7 @@ import {
   OrderGetAllLimitReqDto,
   OrderGetAllPageReqDto,
   OrderGetAllSortOrderReqDto,
-  ShopAllResDto,
+  OrderAllResDto,
   UserHeaderReqDto,
 } from './dto';
 import {
@@ -29,13 +29,13 @@ import { Serialize } from '../utils/loaders/SerializeDto';
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
-  @Serialize(ShopAllResDto)
+  @Serialize(OrderAllResDto)
   @ApiResponse({
     description: 'for more information please check ProductCreateReqDto schema',
   })
   @ApiOkResponse({
     description: 'Retrived Products successfully',
-    type: ShopAllResDto,
+    type: OrderAllResDto,
     status: 201,
   })
   @ApiBadRequestResponse({
@@ -45,7 +45,7 @@ export class OrdersController {
   @ApiBearerAuth()
   @HttpCode(HttpStatus.FOUND)
   @Get()
-  async getProducts(
+  async getOrders(
     @Headers('user') user: UserHeaderReqDto,
     @Query('page') page: OrderGetAllPageReqDto,
     @Query('limit') limit: OrderGetAllLimitReqDto,

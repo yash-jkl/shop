@@ -7,6 +7,10 @@ const example = [orderExample];
 export class Product {
   @Expose()
   @IsString()
+  id: string;
+
+  @Expose()
+  @IsString()
   title: string;
 }
 
@@ -26,12 +30,13 @@ export class Order {
   product: Product;
 }
 
-export class ShopAllResDto {
+export class OrderAllResDto {
   @Expose()
   @ApiProperty({ type: [Order], example })
   @Type(() => Order)
   orders: Array<Order>;
 
   @Expose()
+  @ApiProperty({ example: 1 })
   total: number;
 }
