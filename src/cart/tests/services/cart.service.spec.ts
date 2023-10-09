@@ -4,7 +4,12 @@ import { CartService } from '../../services/cart.service';
 import { LoggerService } from '../../../utils/logger/winstonLogger';
 import { mockCartRepository } from '../mocks';
 import { Helper } from '../../helper/helper';
-import { mockItemInput, userHeaderInput } from '../constants';
+import {
+  mockCartItems,
+  mockGetCartOutput,
+  mockItemInput,
+  userHeaderInput,
+} from '../constants';
 import {
   DatabaseConnectionException,
   NotFoundException,
@@ -86,6 +91,24 @@ describe('Cart Service', () => {
       cartRepository.deleteCartItems.mockRejectedValue(NotFoundException);
       try {
         await cartService.deleteCart(userHeaderInput);
+      } catch (error) {
+        expect(error).toBeInstanceOf(NotFoundException);
+      }
+    });
+  });
+
+  describe('getCart', () => {
+    it('cartRepository.getCart should be called for valid data and function return cart with total', async () => {
+      cartRepository.getCart.mockReturnValue(mockCartItems);
+      const data = await cartService.getCart(userHeaderInput);
+      expect(cartRepository.getCart).toBeCalled();
+      expect(data).toEqual(mockGetCartOutput);
+    });
+
+    it('should throw NotFoundException exception when faced with error from databse', async () => {
+      cartRepository.getCart.mockRejectedValue(NotFoundException);
+      try {
+        await cartService.getCart(userHeaderInput);
       } catch (error) {
         expect(error).toBeInstanceOf(NotFoundException);
       }
