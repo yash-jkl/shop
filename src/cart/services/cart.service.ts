@@ -3,7 +3,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import { AddToCartReqDto, UserHeaderReqDto } from '../dto';
 import { CartRepository } from '../repository/cart.repository';
 import { LoggerService } from '../../utils/logger/winstonLogger';
-import { PaymentsService } from '../../utils/payments/payments.service';
 import { DatabaseConnectionException, NotFoundException } from '../errors';
 
 export interface ICartService {}
@@ -17,8 +16,6 @@ export class CartService implements ICartService {
     private readonly helper: Helper,
 
     private readonly logger: LoggerService,
-
-    private readonly paymentsService: PaymentsService,
   ) {}
 
   static logInfo = 'Service - Cart';
