@@ -58,11 +58,9 @@ export class PaymentEntity extends BaseEntity {
   quantity: number;
 
   @Column({
-    type: 'enum',
-    enum: PaymentStatus,
     default: PaymentStatus.PENDING,
   })
-  status: PaymentStatus;
+  status: string;
 
   @CreateDateColumn({
     name: 'created_at',
