@@ -9,8 +9,13 @@ import { PaymentCheckoutType, PaymentStatus } from '../constants';
 import { PaymentRepository } from '../repository/payment.repository';
 import { OrdersService } from '../../orders/services/orders.service';
 
+export interface IPaymentService {
+  checkout(user: UserHeaderReqDto);
+  verify(event: Buffer, signature: any);
+}
+
 @Injectable()
-export class PaymentService {
+export class PaymentService implements IPaymentService {
   constructor(
     @Inject(CartRepository)
     private readonly cartRepository: CartRepository,
