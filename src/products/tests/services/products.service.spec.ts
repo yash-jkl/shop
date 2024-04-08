@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsService } from '../../services/products.service';
-import { LoggerService } from '../../../utils/logger/winstonLogger';
+import { LoggerService } from '../../../utils/logger/WinstonLogger';
 import { ProductRepository } from '../../repository/product.repository';
 import { mockProductsRepository } from '../mocks/product.repository.mock';
 import { AdminRepository } from '../../../admin/repository/admin.repository';

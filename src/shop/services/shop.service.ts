@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { LoggerService } from '../../utils/logger/winstonLogger';
+import { LoggerService } from '../../utils/logger/WinstonLogger';
 import {
   ShopGetAllFieldReqDto,
   ShopGetAllLimitReqDto,

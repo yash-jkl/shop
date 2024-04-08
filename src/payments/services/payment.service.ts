@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { UserHeaderReqDto } from '../dto';
-import { LoggerService } from '../../utils/logger/winstonLogger';
+import { LoggerService } from '../../utils/logger/WinstonLogger';
 import { CartRepository } from '../../cart/repository/cart.repository';
 import { PaymentsService } from '../../utils/payments/payments.service';
 import { NotFoundException } from '../errors';

@@ -15,7 +15,7 @@ import {
   emailExistsException,
   passwordMismatchException,
 } from '../errors';
-import { LoggerService } from '../../utils/logger/winstonLogger';
+import { LoggerService } from '../../utils/logger/WinstonLogger';
 import { EmailService } from '../../utils/email/email.service';
 import { UserEntity } from '../entities';
 

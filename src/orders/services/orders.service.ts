@@ -5,7 +5,7 @@ import { EmailService } from '../../utils/email/email.service';
 import { OrderRepository } from '../repository/order.repository';
 import { verifyPayment } from '../../utils/constants';
 import { PaymentStatus } from '../../payments/constants';
-import { LoggerService } from '../../utils/logger/winstonLogger';
+import { LoggerService } from '../../utils/logger/WinstonLogger';
 import {
   OrderGetAllFieldReqDto,
   OrderGetAllSortOrderReqDto,

@@ -15,7 +15,7 @@ export const env = {
   db: {
     type: getOsEnv('DB_CONNECTION'),
     host: getOsEnvOptional('DB_HOST'),
-    port: parseInt(getOsEnvOptional('DB_PORT')),
+    port: parseInt(getOsEnvOptional('LOCAL_DATABASE_PORT')),
     username: getOsEnvOptional('DB_USERNAME'),
     password: getOsEnvOptional('DB_PASSWORD'),
     database: getOsEnv('DB_DATABASE'),

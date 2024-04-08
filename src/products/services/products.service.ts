@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { AdminHeaderReqDto } from '../../admin/dto';
 import { ProductCreateReqDto } from '../dto/request/product-create.dto';
 import { ProductRepository } from '../repository/product.repository';
-import { LoggerService } from '../../utils/logger/winstonLogger';
+import { LoggerService } from '../../utils/logger/WinstonLogger';
 import { DatabaseConnectionException, NotFoundException } from '../errors';
 import { AdminRepository } from '../../admin/repository/admin.repository';
 import {

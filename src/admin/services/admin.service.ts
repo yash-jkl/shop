@@ -9,7 +9,7 @@ import {
   authFailedException,
   emailExistsException,
 } from '../errors';
-import { LoggerService } from '../../utils/logger/winstonLogger';
+import { LoggerService } from '../../utils/logger/WinstonLogger';
 import { AdminUsersSeedData } from '../seed-data/admin-user.seed-data';
 
 export interface IAdminService {

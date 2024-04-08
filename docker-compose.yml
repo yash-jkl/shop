@@ -1,5 +1,20 @@
 version: '3'
 services:
+  # app:
+  #   networks:
+  #     - mynetwork
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 3001:3001
+  #   volumes:
+  #     - .:/app
+  #   environment:
+  #     NODE_ENV: development
+  #   depends_on:
+  #     - database
+
   database:
     image: postgres:latest
     container_name: postgres
@@ -11,6 +26,9 @@ services:
       - "${DB_PORT}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+networks:
+  mynetwork:
 
 volumes:
   postgres_data:

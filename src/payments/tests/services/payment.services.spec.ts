@@ -1,7 +1,7 @@
 import { TestingModule, Test } from '@nestjs/testing';
 import { OrdersService } from '../../../orders/services/orders.service';
 import { PaymentRepository } from '../../repository/payment.repository';
-import { LoggerService } from '../../../utils/logger/winstonLogger';
+import { LoggerService } from '../../../utils/logger/WinstonLogger';
 import { mockPaymentRepository, mockPaymentsService } from '../mocks';
 import { CartRepository } from '../../../cart/repository/cart.repository';
 import { mockCartRepository } from '../../../cart/tests/mocks';

@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ShopService } from '../../services/shop.service';
-import { LoggerService } from '../../../utils/logger/winstonLogger';
+import { LoggerService } from '../../../utils/logger/WinstonLogger';
 import { ShopRepository } from '../../repository/Shop.repository';
 import { mockShopRepository } from '../mocks/shop.repository.mock';
 import {

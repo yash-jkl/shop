@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { env } from '../../../env';
 import Stripe from 'stripe';
-import { LoggerService } from '../../logger/winstonLogger';
+import { LoggerService } from '../../logger/WinstonLogger';
 import { verifyPayment } from '../../constants';
 
 @Injectable()

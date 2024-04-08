@@ -2,7 +2,7 @@ import { Helper } from '../helper/helper';
 import { Inject, Injectable } from '@nestjs/common';
 import { AddToCartReqDto, UserHeaderReqDto } from '../dto';
 import { CartRepository } from '../repository/cart.repository';
-import { LoggerService } from '../../utils/logger/winstonLogger';
+import { LoggerService } from '../../utils/logger/WinstonLogger';
 import { DatabaseConnectionException, NotFoundException } from '../errors';
 
 export interface ICartService {
